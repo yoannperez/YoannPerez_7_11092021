@@ -1,0 +1,22 @@
+{
+  "name": "p7_Groupomania",
+  "version": "1.0.0",
+  "description": "Vous trouverez dans ce repo les fichiers rendus pour la soutenace du projet 07 \" Groupomania \" réalisé dans le cadre du parcours développeur web proposée sur la plateforme Openclassrooms: [https://openclassrooms.com/fr/paths/185-developpeur-web](https://openclassrooms.com/fr/paths/185-developpeur-web).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "inst":"(cd backend & npm install) && (cd ..) && (cd frontend & npm install)",
+    "startback": "(cd backend & node server)",
+    "startfront": "(cd frontend & npm start)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoannperez/YoannPerez_6_15082021.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yoannperez/YoannPerez_6_15082021/issues"
+  },
+  "homepage": "https://github.com/yoannperez/YoannPerez_6_15082021#readme"
+}

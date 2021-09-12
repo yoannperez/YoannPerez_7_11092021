@@ -13,65 +13,198 @@ const jwt = require("jsonwebtoken");
 require ('dotenv').config();
 
 // Call user model
-const User = require("../models/Users");
+// const User = require("../models/customers");
 
 
-// Create a user function
-exports.signup = (req, res, next) => {
-  bcrypt
-    // Create an encrypt hash from user's password, salted 10X
-    .hash(req.body.password, 10)
-    // With Promise, create user from userSchema, add email from req, then add hash as password
-    .then((hash) => {
-      const user = new User({
-        email: req.body.email,
-        password: hash,
+
+const controller = {};
+
+//import model
+const Customers = require("../models/customers");
+// const Countries = require("./models/Countries");
+const { Op } = require("sequelize");
+
+controller.index = (req, res) => {
+  const data = {
+    name: "John Smith",
+    age: 20,
+    city: "London",
+  };
+  res.json(data);
+};
+
+controller.list = async (req, res) => {
+  try {
+    const response = await Customers.findAll({
+      // include : [Countries]
+      // include: [
+      //   {
+      //     model: Countries,
+      //     where: { name: "Colombia" },
+      //   }]
+      include: [
+        {
+          model: Countries,
+          attributes: ["name"],
+        },
+      ],
+    })
+      .then(function (data) {
+        const res = { success: true, message: "Load successful", data: data };
+        return res;
+      })
+      .catch((error) => {
+        const res = { success: false, error: error };
+        return res;
       });
-      user
-        // Save into MongoDB Database
-        .save()
-        // If everything's fine, send a 201 status code
-        .then(() => res.status(201).json({ message: "User created !" }))
-        // If there's a problem, return a 400 status code
-        .catch((error) => res.status(400).json({ error }));
-    })
-    // if bcrypt has a problem, send an error server status code
-    .catch((error) => res.status(500).json({ error }));
+
+    return res.json(response);
+  } catch (error) {
+    console.log("Error controller.list");
+    console.log(error);
+  }
 };
 
-// Login function
-exports.login = (req, res, next) => {
-  // Check in database if user exists
-  User.findOne({ email: req.body.email })
-    .then((user) => {
-      // if user doesn't exist in database, return an error
-      if (!user) {
-        return res.status(401).json({ error: "User not found !" });
+//Filtrer par pays
+controller.listCountries = async (req, res) => {
+  try {
+    const response = await Countries.findAll({
+      include: ["getCustomers"],
+      // include: [
+      //   {
+      //     model: getCustomers,
+      //     attributes: ["name"],
+      //   },
+      // ],
+    })
+
+      .then(function (data) {
+        const res = { success: true, message: "Load successful", data: data };
+        return res;
+      })
+      .catch((error) => {
+        const res = { success: false, error: error };
+        return res;
+      });
+
+    return res.json(response);
+  } catch (error) {
+    console.log("Error controller.list");
+    console.log(error);
+  }
+};
+
+//Création d'un utilisateur
+
+controller.create = async (req, res) => {
+  try {
+    const response = await Customers.create({
+      name: "John Smith 1",
+      email: "john@john.john",
+      address: "Avenidad de Guimar",
+      phone: "12345678",
+      countryCode: "US",
+    })
+      .then(function (data) {
+        const res = {
+          succes: true,
+          message: "Created successful",
+          data: data,
+        };
+        return res;
+      })
+      .catch((error) => {
+        const res = { success: false, error: error };
+        return res;
+      });
+
+    res.json(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//mise à jour d'un utilisateur
+controller.update = async (req, res) => {
+  try {
+    const idCustomer = 3;
+    const response = await Customers.update(
+      {
+        name: "This is my correction",
+        email: "email@email.com",
+        address: "Avenidad de News",
+        phone: "187654321",
+      },
+      {
+        where: {
+          id: idCustomer,
+        },
       }
-      // if user exists, we need to verify password
-      bcrypt
-        // Bcrypt can compare two different Hashes, and determin if they come from the same password
-        .compare(req.body.password, user.password)
-
-        .then((valid) => {
-          // In case password is not valid
-          if (!valid) {
-            return res.status(401).json({ error: "Wrong password !" });
-          }
-          // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
-          res.status(200).json({
-            userId: user._id,
-            token: jwt.sign(
-              // Token created with userId
-              { userId: user._id },
-              // the private key stored in .env file
-              process.env.TOKEN_KEY,
-              // Valid for 24h
-              {expiresIn: '24h'}
-              ),
-          });
-        })
-        .catch((error) => res.status(500).json({ error }));
-    })
-    .catch((error) => res.status(500).json({ error }));
+    )
+      .then(function (data) {
+        const res = {
+          succes: true,
+          message: "Update successful",
+          data: data,
+        };
+        return res;
+      })
+      .catch((error) => {
+        const res = { success: false, error: error };
+        return res;
+      });
+    res.json(response);
+  } catch (error) {
+    console.log(error);
+  }
 };
+
+// Get one customer
+controller.get = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await Customers.findAll({
+      where: { id: id },
+      //   where:{
+      //       name:{
+      //           [Op.like]: "%This%"
+      //       }
+      //   }
+    })
+      .then(function (data) {
+        const res = { succes: true, data: data };
+        return res;
+      })
+      .catch((error) => {
+        const res = { success: false, error: error };
+        return res;
+      });
+    res.json(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Delete one customer
+controller.delete = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const response = await Customers.destroy({
+      where: { id: id },
+    })
+      .then(function (data) {
+        const res = { success: true, data: data, message: "Delected successfull" };
+        return res;
+      })
+      .catch((error) => {
+        const res = { success: false, error: error };
+        return res;
+      });
+    res.json(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = controller;

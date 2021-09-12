@@ -2,16 +2,22 @@
 //                                         --                 ROUTES FOR USERS                --
 //                                         -------------------------------------------------------
 
-// Call modules
 const express = require("express");
-const router = express.Router();
+const route = express();
 
-// Call controller
-const userCtrl = require("../controllers/user");
+//Import controller
+const controller = require("../controllers/user");
 
-// Routes
-router.post("/signup", userCtrl.signup);
-router.post("/login", userCtrl.login);
+//create route
+route.get("/index", controller.index);
+// route.get("/list", controller.list);
+// route.get("/countries", controller.listCountries);
+// route.get("/create", controller.create);
+// route.get("/update", controller.update);
+// route.get("/get/:id", controller.get);
+// route.get("/delete/:id", controller.delete);
 
-// Export module
-module.exports = router;
+
+
+//Export route
+module.exports = route;

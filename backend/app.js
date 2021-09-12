@@ -5,22 +5,20 @@
 
 // Call modules
 const express = require("express");
-const mongoose = require("mongoose");
 const path = require('path');
 
+
+// Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
+require ('dotenv').config();
+
 // Call Routes files
-const userRoutes = require("./routes/user");
-const sauceRoutes = require("./routes/sauces");
+const userRoutes = require ('./routes/user')
+// const userRoutes = require("./routes/user");
+// const sauceRoutes = require("./routes/sauces");
 
 // Launch Xpress
 const app = express();
 
-
-// Create a connexion with MongoDB Atlas database
-mongoose
-  .connect(process.env.MONGO_KEY)
-  .then(() => console.log("MongoDB Database Online! You rocks !"))
-  .catch(() => console.log("MongoDB Databse Offline, you've got a problem ! Please check .env config file."));
 
 
 // CORS Definition  
@@ -38,13 +36,14 @@ app.use((req, res, next) => {
 // a root's subfolder used when we receive a /images request
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// Define BodyParser
+// Define JSON Parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
 // Define Routes
-app.use("/api/auth", userRoutes); // Routes to identification
-app.use("/api/sauces", sauceRoutes); // Routes to sauces
+// Routes to user identification
+// app.use("/api/auth", userRoutes); 
+// app.use("/api/sauces", sauceRoutes); // Routes to sauces
 
 module.exports = app;

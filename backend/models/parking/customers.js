@@ -5,7 +5,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../config/database");
 // const Countries = require("./Countries");
 
-const Customers = sequelize.define("customers", {
+const Customers = sequelize.define("user", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

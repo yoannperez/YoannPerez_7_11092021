@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize')
+const { Sequelize, Op, Model, DataTypes } = require('sequelize')
 
 // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 require ('dotenv').config();
@@ -14,6 +14,10 @@ const database = new Sequelize (
         host:process.env.SQL_SERVER,
         dialect:"mysql",
         port:"3306",
+
+        //Options log database
+        // logging: false,
+        // logging: (...msg) => console.log(msg),
     }
 
 );

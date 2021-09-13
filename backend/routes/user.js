@@ -3,21 +3,21 @@
 //                                         -------------------------------------------------------
 
 const express = require("express");
-const route = express();
+const router = express.Router();
 
 //Import controller
-const controller = require("../controllers/user");
+const userCtrl = require("../controllers/user");
 
 //create route
-route.get("/index", controller.index);
-// route.get("/list", controller.list);
-// route.get("/countries", controller.listCountries);
-// route.get("/create", controller.create);
-// route.get("/update", controller.update);
-// route.get("/get/:id", controller.get);
-// route.get("/delete/:id", controller.delete);
+router.get("/index", userCtrl.index);
+router.get("/create", userCtrl.create);
+router.post("/signup", userCtrl.signup);
+// router.get("/list", userCtrl.list);
+// router.get("/countries", userCtrl.listCountries);
 
-
+// router.get("/update", userCtrl.update);
+// router.get("/get/:id", userCtrl.get);
+// router.get("/delete/:id", userCtrl.delete);
 
 //Export route
-module.exports = route;
+module.exports = router;

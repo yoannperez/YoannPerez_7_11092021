@@ -43,7 +43,7 @@ app.use(express.json());
 
 // Define Routes
 // Routes to user identification
-// app.use("/api/auth", userRoutes); 
+app.use("/api/auth", userRoutes); 
 // app.use("/api/sauces", sauceRoutes); // Routes to sauces
 
 module.exports = app;

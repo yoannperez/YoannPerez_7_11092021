@@ -12,6 +12,7 @@ const userCtrl = require("../controllers/user");
 router.get("/index", userCtrl.index);
 router.get("/create", userCtrl.create);
 router.post("/signup", userCtrl.signup);
+router.post("/login", userCtrl.login);
 // router.get("/list", userCtrl.list);
 // router.get("/countries", userCtrl.listCountries);
 

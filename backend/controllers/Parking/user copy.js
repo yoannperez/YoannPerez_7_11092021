@@ -2,7 +2,6 @@
 //                                         --                  USER CONTROLLER                  --
 //                                         -------------------------------------------------------
 
-
 // Call security modules needed for authentification
 //--------------------------------------------------
 // Crytping password with bcrypt
@@ -10,11 +9,10 @@ const bcrypt = require("bcrypt");
 // Token validation by JWT
 const jwt = require("jsonwebtoken");
 // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
-require ('dotenv').config();
+require("dotenv").config();
 
 // Call user model
 const User = require("../models/Users");
-
 
 // Create a user function
 exports.signup = (req, res, next) => {
@@ -67,8 +65,8 @@ exports.login = (req, res, next) => {
               // the private key stored in .env file
               process.env.TOKEN_KEY,
               // Valid for 24h
-              {expiresIn: '24h'}
-              ),
+              { expiresIn: "24h" }
+            ),
           });
         })
         .catch((error) => res.status(500).json({ error }));

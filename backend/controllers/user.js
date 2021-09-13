@@ -99,67 +99,51 @@ exports.create = async (req, res) => {
 // ------------------- LOGIN ---------------------------
 // ------------------- LOGIN ---------------------------
 exports.login = async (req, res, next) => {
-
   try {
-    console.log(req.body.email)
+    console.log(req.body.email);
     const response = await User.findAll({
-      where: { email : req.body.email },
-      
+      where: { email: req.body.email },
     })
-      .then(function (data) {
-        const res = { succes: true, data: data };
-        return res;
-      })
-      .catch((error) => {
-        const res = { success: false, error: error };
-        return res;
-      });
+    console.log(response.body)  
     res.json(response);
   } catch (error) {
     console.log(error);
-  }};
+  }
+};
 
+// // Check in database if user exists
+// User.findOne({ where: { email: email } })
+//   .then((user) => {
+//     // if user doesn't exist in database, return an error
+//     if (!user) {
+//       return res.status(401).json({ error: "User not found !" });
+//     }
+//     // if user exists, we need to verify password
+//     bcrypt
+//       // Bcrypt can compare two different Hashes, and determin if they come from the same password
+//       .compare(req.body.password, user.password)
 
-
-  
-  
-
-
-  
-//   // Check in database if user exists
-//   User.findOne({ where: { email: email } })
-//     .then((user) => {
-//       // if user doesn't exist in database, return an error
-//       if (!user) {
-//         return res.status(401).json({ error: "User not found !" });
-//       }
-//       // if user exists, we need to verify password
-//       bcrypt
-//         // Bcrypt can compare two different Hashes, and determin if they come from the same password
-//         .compare(req.body.password, user.password)
-
-//         .then((valid) => {
-//           // In case password is not valid
-//           if (!valid) {
-//             return res.status(401).json({ error: "Wrong password !" });
-//           }
-//           // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
-//           res.status(200).json({
-//             userId: user._id,
-//             token: jwt.sign(
-//               // Token created with userId
-//               { userId: user._id },
-//               // the private key stored in .env file
-//               process.env.TOKEN_KEY,
-//               // Valid for 24h
-//               {expiresIn: '24h'}
-//               ),
-//           });
-//         })
-//         .catch((error) => res.status(500).json({ error :"bcrypt error"}));
-//     })
-//     .catch((error) => res.status(500).json({ error :"find error"}));
-// };
+//       .then((valid) => {
+//         // In case password is not valid
+//         if (!valid) {
+//           return res.status(401).json({ error: "Wrong password !" });
+//         }
+//         // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
+//         res.status(200).json({
+//           userId: user._id,
+//           token: jwt.sign(
+//             // Token created with userId
+//             { userId: user._id },
+//             // the private key stored in .env file
+//             process.env.TOKEN_KEY,
+//             // Valid for 24h
+//             {expiresIn: '24h'}
+//             ),
+//         });
+//       })
+//       .catch((error) => res.status(500).json({ error :"bcrypt error"}));
+//   })
+//   .catch((error) => res.status(500).json({ error :"find error"}));
 
 // Get one customer
 controller.get = async (req, res) => {
@@ -186,8 +170,6 @@ controller.get = async (req, res) => {
     console.log(error);
   }
 };
-
-
 
 // controller.list = async (req, res) => {
 //   try {
@@ -249,8 +231,6 @@ controller.get = async (req, res) => {
 //     console.log(error);
 //   }
 // };
-
-
 
 // //mise à jour d'un utilisateur
 // controller.update = async (req, res) => {

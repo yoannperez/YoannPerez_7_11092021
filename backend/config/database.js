@@ -13,8 +13,7 @@ const database = new Sequelize (
     {
         host:process.env.SQL_SERVER,
         dialect:"mysql",
-        port:"3306",
-
+        port:process.env.SQL_PORT,
         //Options log database
         // logging: false,
         // logging: (...msg) => console.log(msg),

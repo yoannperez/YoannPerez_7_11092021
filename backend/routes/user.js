@@ -15,7 +15,7 @@ const userCtrl = require("../controllers/user");
 router.post("/signup", userCtrl.signup);
 router.post("/login", userCtrl.login);
 router.delete("/delete/:id", userCtrl.delete);
-// router.get("/get", userCtrl.get);
+router.get("/get", userCtrl.getAll);
 
 // router.get("/get/:id", userCtrl.get);
 

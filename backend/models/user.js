@@ -1,5 +1,5 @@
 //Import sequelize
-const Sequelize = require("sequelize");
+const { Sequelize, Op, Model, DataTypes } = require('sequelize')
 
 // Import connection database
 const sequelize = require("../config/database");
@@ -7,13 +7,17 @@ const sequelize = require("../config/database");
 
 const Customers = sequelize.define("users", {
   id: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
   name: Sequelize.STRING,
-  email: Sequelize.STRING,
-  password: Sequelize.STRING,
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  password: DataTypes.STRING,
   // address: Sequelize.STRING,
   // phone: Sequelize.BIGINT,
   // countryCode:{
@@ -24,6 +28,11 @@ const Customers = sequelize.define("users", {
   //   }
   // },
 });
+// (async () => {
+//   await sequelize.sync({ force: true });
+//   // Code here
+// })();
+
 module.exports = Customers;
 
 

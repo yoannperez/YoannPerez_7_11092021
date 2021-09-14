@@ -1,7 +1,11 @@
 //                                         -------------------------------------------------------
 //                                         --                  USER CONTROLLER                  --
 //                                         -------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
 
+'use strict';
+//--------------------------------------------------
 // Call security modules needed for authentification
 //--------------------------------------------------
 // Crytping password with bcrypt
@@ -19,18 +23,22 @@ const controller = {};
 // const Countries = require("./models/Countries");
 const { Op } = require("sequelize");
 
-exports.index = (req, res) => {
-  const data = {
-    name: "John Doe",
-    age: 20,
-    city: "will never die",
-  };
-  res.json(data);
-};
+// ----------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
 // ------------------------ Création d'un utilisateur ------------------------
-// Create a user function
+// ---------------------------------------------------------------------------
+
 exports.signup = async (req, res, next) => {
+  User.findOne({ where: { email: req.body.email } })
+  .then((user) => {
+    // if user doesn't exist in database, return an error
+    if (user) {
+      return res.status(401).json({ error: `Email already exists in database!` });
+    }
+
   bcrypt
     // Create an encrypt hash from user's password, salted 10X
     .hash(req.body.password, 10)
@@ -47,25 +55,23 @@ exports.signup = async (req, res, next) => {
           password: hash,
         })
           .then(function (data) {
-            const res = {
-              succes: true,
-              message: "Created successful",
-              data: data,
-            };
-            return res;
+            res.status(201).json({ message: "User created" })
+            
+            // return res;
           })
           .catch((error) => {
             const res = { success: false, error: error };
             return res;
           });
-
-        res.json(response);
+        res.status(201).json({ message: "User created" })
+        // res.json(response);
       } catch (error) {
         console.log(error);
       }
     })
     // if bcrypt has a problem, send an error server status code
-    .catch((error) => res.status(500).json({ error }));
+    .catch((error) => res.status(500).json({ error: "Bad request" }));
+  });
 };
 
 // ----------------------------------------------------------------
@@ -96,80 +102,56 @@ exports.create = async (req, res) => {
     console.log(error);
   }
 };
-// ------------------- LOGIN ---------------------------
-// ------------------- LOGIN ---------------------------
-exports.login = async (req, res, next) => {
-  try {
-    console.log(req.body.email);
-    const response = await User.findAll({
-      where: { email: req.body.email },
-    })
-    console.log(response.body)  
-    res.json(response);
-  } catch (error) {
-    console.log(error);
-  }
-};
+// ---------------------------------------------------------------------------
+// -------------------------  Login d'un utilisateur  ------------------------
+// ---------------------------------------------------------------------------
+exports.login = (req, res, next) => {
+  // Check in database if user exists
+  User.findOne({ where: { email: req.body.email } })
+  .then((user) => {
+    // if user doesn't exist in database, return an error
+    if (!user) {
+      return res.status(401).json({ error: `User doesn't exist in database!` });
+    }
+    // if user exists, we need to verify password
+    bcrypt
+      // Bcrypt can compare two different Hashes, and determin if they come from the same password
+      .compare(req.body.password, user.password)
 
-// // Check in database if user exists
-// User.findOne({ where: { email: email } })
-//   .then((user) => {
-//     // if user doesn't exist in database, return an error
-//     if (!user) {
-//       return res.status(401).json({ error: "User not found !" });
-//     }
-//     // if user exists, we need to verify password
-//     bcrypt
-//       // Bcrypt can compare two different Hashes, and determin if they come from the same password
-//       .compare(req.body.password, user.password)
-
-//       .then((valid) => {
-//         // In case password is not valid
-//         if (!valid) {
-//           return res.status(401).json({ error: "Wrong password !" });
-//         }
-//         // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
-//         res.status(200).json({
-//           userId: user._id,
-//           token: jwt.sign(
-//             // Token created with userId
-//             { userId: user._id },
-//             // the private key stored in .env file
-//             process.env.TOKEN_KEY,
-//             // Valid for 24h
-//             {expiresIn: '24h'}
-//             ),
-//         });
-//       })
-//       .catch((error) => res.status(500).json({ error :"bcrypt error"}));
-//   })
-//   .catch((error) => res.status(500).json({ error :"find error"}));
-
-// Get one customer
-controller.get = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const response = await Customers.findAll({
-      where: { id: id },
-      //   where:{
-      //       name:{
-      //           [Op.like]: "%This%"
-      //       }
-      //   }
-    })
-      .then(function (data) {
-        const res = { succes: true, data: data };
-        return res;
+      .then((valid) => {
+        // In case password is not valid
+        if (!valid) {
+          return res.status(401).json({ error: "Wrong password !" });
+        }
+        // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
+        res.status(200).json({
+          userId: user._id,
+          token: jwt.sign(
+            // Token created with userId
+            { userId: user._id },
+            // the private key stored in .env file
+            process.env.TOKEN_KEY,
+            // Valid for 24h
+            { expiresIn: "24h" }
+          ),
+        });
       })
-      .catch((error) => {
-        const res = { success: false, error: error };
-        return res;
-      });
-    res.json(response);
-  } catch (error) {
-    console.log(error);
-  }
+      .catch((error) => res.status(500).json({ error: "bcrypt error, check password !" }));
+  })
+  .catch((error) => res.status(500).json({ error :"Server error, POST message invalid, check email !"}));
 };
+
+// ---------------------------------------------------------------------------
+// -----------------------  Recherche d'un utilisateur  ----------------------
+// ---------------------------------------------------------------------------
+
+exports.search = (req, res) => {
+
+}
+
+// --------------------------------------------------------------------------
+// -------------------------------  PARKING  --------------------------------
+// --------------------------------------------------------------------------
 
 // controller.list = async (req, res) => {
 //   try {

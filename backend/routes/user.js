@@ -9,8 +9,8 @@ const router = express.Router();
 const userCtrl = require("../controllers/user");
 
 //create route
-router.get("/index", userCtrl.index);
-router.get("/create", userCtrl.create);
+// router.get("/index", userCtrl.index);
+// router.get("/create", userCtrl.create);
 router.post("/signup", userCtrl.signup);
 router.post("/login", userCtrl.login);
 // router.get("/list", userCtrl.list);

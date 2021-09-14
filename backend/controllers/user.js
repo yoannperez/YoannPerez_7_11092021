@@ -1,8 +1,9 @@
 //                                         -------------------------------------------------------
 //                                         --                  USER CONTROLLER                  --
 //                                         -------------------------------------------------------
-// ----------------------------------------------------------------------------------------------------
-// ----------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
 
 "use strict";
 //--------------------------------------------------
@@ -17,7 +18,7 @@ require("dotenv").config();
 
 // Call user model
 const User = require("../models/user");
-const controller = {};
+// const controller = {};
 
 //import model
 // const Countries = require("./models/Countries");
@@ -74,38 +75,10 @@ exports.signup = (req, res, next) => {
     .catch((error) => res.status(500).json({ error: "Very Bad request, need to verify message !" }));
 };
 
-// ----------------------------------------------------------------
-exports.create = async (req, res) => {
-  try {
-    const response = await User.create({
-      name: "John Doe",
-      email: "john.doe@jojo.com",
-      password: "AZERTY",
-      // phone: "12345678",
-      // countryCode: "US",
-    })
-      .then(function (data) {
-        const res = {
-          succes: true,
-          message: "Created successful",
-          data: data,
-        };
-        return res;
-      })
-      .catch((error) => {
-        const res = { success: false, error: error };
-        return res;
-      });
-
-    res.json(response);
-  } catch (error) {
-    console.log(error);
-  }
-};
 // ---------------------------------------------------------------------------
 // -------------------------  Login d'un utilisateur  ------------------------
 // ---------------------------------------------------------------------------
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
   // Check in database if user exists
   User.findOne({ where: { email: req.body.email } })
     .then((user) => {
@@ -145,9 +118,27 @@ exports.login = (req, res, next) => {
 // -----------------------------  Delete User  -------------------------------
 // ---------------------------------------------------------------------------
 
-
-
-
+exports.delete = (req, res) => {
+  const { id } = req.params;
+  console.log("ceci est id " + id);
+  User.findOne({ where: { id: id } })
+    .then((user) => {
+      // if user doesn't exist in database, return an error
+      if (!user) {
+        return res.status(401).json({ error: `User id doesn't exists in database!` });
+      }
+      User.destroy({
+        where: { id: id },
+      })
+        .then(function (data) {
+          res.status(200).json({ message: "User Deleted" });
+        })
+        .catch((error) => {
+          res.status(401).json({ message: "Something went wrong" });
+        });
+    })
+    .catch((error) => res.status(500).json({ error: "Very Bad request, need to verify message !" }));
+};
 
 
 // ---------------------------------------------------------------------------
@@ -281,27 +272,3 @@ exports.search = (req, res) => {};
 //     console.log(error);
 //   }
 // };
-
-// // Delete one customer
-// controller.delete = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     const response = await Customers.destroy({
-//       where: { id: id },
-//     })
-//       .then(function (data) {
-//         const res = { success: true, data: data, message: "Delected successfull" };
-//         return res;
-//       })
-//       .catch((error) => {
-//         const res = { success: false, error: error };
-//         return res;
-//       });
-//     res.json(response);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// module.exports = controller;

@@ -11,7 +11,10 @@ const User = sequelize.define("users", {
     primaryKey: true,
     autoIncrement: true,
   },
-  name: DataTypes.STRING,
+  name: {type:DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -19,6 +22,20 @@ const User = sequelize.define("users", {
   },
   password: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
+  },
+  comunities_id: {
+    type: DataTypes.STRING,
+  },
+  isAdmin: {
+    type: DataTypes.BOOLEAN,
+    defaultValue:false,
   },
   // address: Sequelize.STRING,
   // phone: Sequelize.BIGINT,

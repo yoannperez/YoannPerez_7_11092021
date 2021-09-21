@@ -29,15 +29,23 @@ const User = require("../models/user");
 // ---------------------------------------------------------------------------
 
 exports.signup = (req, res, next) => {
+  let isAdmin = false;
   if (!req.body.password) {
     return res.status(401).json({ error: `Password not valid` });
   }
+
   User.findOne({ where: { email: req.body.email } })
     .then((user) => {
       // if user doesn't exist in database, return an error
       if (user) {
         return res.status(401).json({ error: `Email already exists in database!` });
       }
+      // if it's the first user, set admin true
+      User.count()
+      .then ((user) => {if (user === 0) {
+        isAdmin = true
+      } })
+      console.log("coucou")
       bcrypt
         // Create an encrypt hash from user's password, salted 10X
         .hash(req.body.password, 10)
@@ -52,6 +60,7 @@ exports.signup = (req, res, next) => {
               name: req.body.name,
               email: req.body.email,
               password: hash,
+              isAdmin: isAdmin
             })
               .then(function (data) {
                 res.status(201).json({ message: "User created" });

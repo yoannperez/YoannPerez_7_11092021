@@ -21,6 +21,7 @@ router.get("/", auth, communityCtrl.getAll);
 router.get("/:id", auth, communityCtrl.getOne);  
 router.put("/:id", auth, communityCtrl.update);
 router.delete("/:id", auth, communityCtrl.delete);
+router.post("/:id/subscribe", auth, communityCtrl.subscribe);
 
 //Export route
 module.exports = router;

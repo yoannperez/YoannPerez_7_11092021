@@ -9,18 +9,16 @@
 //--------------------------------------------------
 // Call security modules needed for authentification
 //--------------------------------------------------
-// // Crytping password with bcrypt
-// const bcrypt = require("bcrypt");
 // Token validation by JWT
 const jwt = require("jsonwebtoken");
 // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 require("dotenv").config();
-// Call user model
+// Call user & Communities model
 const Community = require("../models/communities");
 const User = require("../models/user");
 
 // ---------------------------------------------------------------------------
-// ------------------------ Create community ------------------------
+// ------------------------      Create community     ------------------------
 // ---------------------------------------------------------------------------
 
 exports.create = (req, res) => {
@@ -95,7 +93,7 @@ exports.update = (req, res) => {
 };
 
 // ---------------------------------------------------------------------------
-// ------------------------ Delete one community ------------------------
+// ------------------------   Delete one community    ------------------------
 // ---------------------------------------------------------------------------
 
 exports.delete = (req, res) => {
@@ -115,8 +113,7 @@ exports.delete = (req, res) => {
 
       Community.findOne({ where: { id: req.params.id } }).then((communitySaved) => {
         if (communitySaved.createdBy == userId || root == true) {
-          Community.destroy({ where: { id: req.params.id } })
-          .then(function (data) {
+          Community.destroy({ where: { id: req.params.id } }).then(function (data) {
             res.status(200).json({ message: "Community Deleted" });
           });
         } else {
@@ -127,4 +124,39 @@ exports.delete = (req, res) => {
     .catch((error) => {
       res.status(404).json({ message: "Something went wrong" });
     });
+};
+
+// ---------------------------------------------------------------------------
+// ------------------------   Subscribe community     ------------------------
+// ---------------------------------------------------------------------------
+
+exports.subscribe = (req, res) => {
+  // -------- Find userid contained in the token -------------------
+  const token = req.headers.authorization.split(" ")[1];
+  // Use of verify function to decode token with the secret key
+  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+  // let get the user id contain in decoded Token
+  const userId = decodedToken.userId;
+
+  Community.findOne({ where: { id: req.params.id } }).then((community) => {
+    let members = community.members;
+
+    let array = Array.from(members.split(","));
+    console.log(array);
+
+    const index = array.indexOf('7');
+    if (index > -1) {
+      array.splice(index, 1);
+    }
+
+    // array.push('133')
+
+    // let test = [3,4,5,6,7,8,9,99];
+    // console.log(test)
+    let tabtostring = array.toString();
+
+    Community.update({ members: tabtostring }, { where: { id: req.params.id } })
+      .then(() => res.status(200).json({ message: "Modified!" }))
+      .catch((error) => res.status(400).json({ error }));
+  });
 };

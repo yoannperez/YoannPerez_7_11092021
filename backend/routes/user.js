@@ -8,18 +8,23 @@
 const express = require("express");
 const router = express.Router();
 
+// Call Middlewares
+const auth = require("../middleware/auth");
+const multer = require("../middleware/multer-config");
+
 //Import controller
 const userCtrl = require("../controllers/user");
 
 // --------------- USERS route -------------------
+router.get("/", auth, userCtrl.getAll); // 
+router.get("/:id", auth, userCtrl.getOne); // 
+router.delete("/delete/:id", auth, userCtrl.delete);
+router.put("/:id", auth, multer, userCtrl.updateUser);
 
-router.delete("/delete/:id", userCtrl.delete);
-router.get("/get", userCtrl.getAll);
 
 // router.get("/", auth, sauceCTRL.getSauce);
 // router.get("/:id", auth, sauceCTRL.getOneSauce);
 // router.post("/", auth, multer, sauceCTRL.createSauce);
-// router.put("/:id", auth, multer, sauceCTRL.modifySauce);
 // router.delete("/:id", auth, sauceCTRL.deleteSauce);
 // router.post("/:id/like", auth, sauceCTRL.likeSauce);
 

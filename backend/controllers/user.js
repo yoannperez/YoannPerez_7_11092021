@@ -15,10 +15,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 require("dotenv").config();
-
 // Call user model
 const User = require("../models/user");
-// const controller = {};
 
 //import model
 // const Countries = require("./models/Countries");
@@ -44,12 +42,12 @@ exports.signup = (req, res, next) => {
   }
 
   // Let see if username is allready taken
-  User.findOne({ where: { name: req.body.name } })
-    .then((user) => {
-      // if user doesn't exist in database, return an error
-      if (user) {
-        return res.status(401).json({ error: `Username already used!` });
-      }})
+  User.findOne({ where: { name: req.body.name } }).then((user) => {
+    // if user doesn't exist in database, return an error
+    if (user) {
+      return res.status(401).json({ error: `Username already used!` });
+    }
+  });
 
   User.findOne({ where: { email: req.body.email } })
     .then((user) => {
@@ -58,11 +56,12 @@ exports.signup = (req, res, next) => {
         return res.status(401).json({ error: `Email already exists in database!` });
       }
       // if it's the first user, set admin true
-      User.count()
-      .then ((user) => {if (user === 0) {
-        isAdmin = true
-      } })
-      console.log("coucou")
+      User.count().then((user) => {
+        if (user === 0) {
+          isAdmin = true;
+        }
+      });
+      console.log("coucou");
       bcrypt
         // Create an encrypt hash from user's password, salted 10X
         .hash(req.body.password, 10)
@@ -77,7 +76,7 @@ exports.signup = (req, res, next) => {
               name: req.body.name,
               email: req.body.email,
               password: hash,
-              isAdmin: isAdmin
+              isAdmin: isAdmin,
             })
               .then(function (data) {
                 res.status(201).json({ message: "User created" });
@@ -123,10 +122,10 @@ exports.login = (req, res) => {
           }
           // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
           res.status(200).json({
-            userId: user._id,
+            userId: user.id,
             token: jwt.sign(
               // Token created with userId
-              { userId: user._id },
+              { userId: user.id },
               // the private key stored in .env file
               process.env.TOKEN_KEY,
               // Valid for 24h
@@ -139,51 +138,109 @@ exports.login = (req, res) => {
     .catch((error) => res.status(500).json({ error: "Server error, POST message invalid, check email !" }));
 };
 
-// ---------------------------------------------------------------------------
-// -----------------------------  Delete User  -------------------------------
-// ---------------------------------------------------------------------------
-
-exports.delete = (req, res) => {
-  const { id } = req.params;
-  console.log("ceci est id " + id);
-  User.findOne({ where: { id: id } })
-    .then((user) => {
-      // if user doesn't exist in database, return an error
-      if (!user) {
-        return res.status(401).json({ error: `User id doesn't exists in database!` });
-      }
-      User.destroy({
-        where: { id: id },
-      })
-        .then(function (data) {
-          res.status(200).json({ message: "User Deleted" });
-        })
-        .catch((error) => {
-          res.status(401).json({ message: "Something went wrong" });
-        });
-    })
-    .catch((error) => res.status(500).json({ error: "Very Bad request, need to verify message !" }));
-};
-
 // --------------------------------------------------------------------------
 // -------------------------- GET ALL USERS  --------------------------------
 // --------------------------------------------------------------------------
 
 exports.getAll = (req, res) => {
   User.findAndCountAll()
-    .then((sauces) => res.status(201).json(sauces))
+    .then((users) => res.status(200).json(users.rows))
     .catch((error) => res.status(404).json({ error }));
 };
 
 // --------------------------------------------------------------------------
-// -------------------------- GET ONE USERS  --------------------------------
+// -------------------------- GET ONE USER  --------------------------------
 // --------------------------------------------------------------------------
 
+exports.getOne = (req, res) => {
+  // -------- Find userid contained in the token -------------------
+  const token = req.headers.authorization.split(" ")[1];
+  // Use of verify function to decode token with the secret key
+  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+  // let get the user id contain in decoded Token
+  const userId = decodedToken.userId;
+
+  User.findOne({ where: { id: userId } }).then((user) => {
+    let root = user.isAdmin;
+    if (req.params.id == userId || root == true) {
+      User.findOne({ where: { id: req.params.id } })
+        .then((user) =>
+          res.status(200).json({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            password: user.password,
+            description: user.description,
+            imageUrl: user.imageUrl,
+            comunities_id: user.comunities_id,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          })
+        )
+        .catch((error) => res.status(404).json({ error }));
+    } else {
+      res.status(404).json({ error: "You are not authorized !" });
+    }
+  });
+};
+
 // ---------------------------------------------------------------------------
-// -----------------------  Recherche d'un utilisateur  ----------------------
+// -----------------------------  Delete User  -------------------------------
 // ---------------------------------------------------------------------------
 
-exports.search = (req, res) => {};
+exports.delete = (req, res) => {
+  // -------- Find userid contained in the token -------------------
+  const token = req.headers.authorization.split(" ")[1];
+  // Use of verify function to decode token with the secret key
+  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+  // let get the user id contain in decoded Token
+  const userId = decodedToken.userId;
+  
+  User.findOne({ where: { id: userId } })
+  
+    .then((user) => {
+      let root = user.isAdmin;
+
+      if (req.params.id == userId || root == true) {
+        User.destroy({ where: { id: req.params.id } })
+          .then(function (data) {
+            res.status(200).json({ message: "User Deleted" });
+          })
+          .catch((error) => {
+            res.status(401).json({ message: "Something went wrong - User not found !" });
+          });
+      } else {
+        res.status(404).json({ error: "Vous n'êtes pas autorisé à supprimer ce compte !" });
+      }
+    })
+    .catch((error) => {
+      res.status(404).json({ message: "Something went wrong" });
+    });
+};
+
+// ---------------------------------------------------------------------------
+// -----------------------------  UPDATE User  -------------------------------
+// ---------------------------------------------------------------------------
+
+exports.updateUser = (req, res) => {
+  // -------- Find userid contained in the token -------------------
+  const token = req.headers.authorization.split(" ")[1];
+  // Use of verify function to decode token with the secret key
+  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+  // let get the user id contain in decoded Token
+  const userId = decodedToken.userId;
+  
+  User.findOne({ where: { id: userId } })
+  
+    .then((user) => {
+      let root = user.isAdmin;
+
+      console.log("coucou")
+    })
+    .catch((error) => {
+      res.status(404).json({ message: "Something went wrong" });
+    });
+};
 
 // --------------------------------------------------------------------------
 // -------------------------------  PARKING  --------------------------------

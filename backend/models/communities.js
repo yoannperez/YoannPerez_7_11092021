@@ -18,11 +18,15 @@ const Community = sequelize.define("communities", {
   createdBy: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+  },
+  members: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    
   },
   posts: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   
 });

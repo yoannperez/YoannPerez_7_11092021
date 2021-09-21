@@ -11,12 +11,12 @@
 //--------------------------------------------------
 // // Crytping password with bcrypt
 // const bcrypt = require("bcrypt");
-// // Token validation by JWT
-// const jwt = require("jsonwebtoken");
+// Token validation by JWT
+const jwt = require("jsonwebtoken");
 // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 require("dotenv").config();
 // Call user model
-const User = require("../models/communities");
+const Community = require("../models/communities");
 
 // ---------------------------------------------------------------------------
 // ------------------------ Create community ------------------------
@@ -24,6 +24,44 @@ const User = require("../models/communities");
 
 exports.create = (req, res) => {
   console.log("Coucou Create");
+  // -------- Find userid contained in the token -------------------
+  const token = req.headers.authorization.split(" ")[1];
+  // Use of verify function to decode token with the secret key
+  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+  // let get the user id contain in decoded Token
+  const userId = decodedToken.userId;
+
+  if (!req.body.name) {
+    return res.status(403).json({ error: `You need to give a name to your community` });
+  }
+
+  // Let see if username is allready taken
+  Community.findOne({ where: { name: req.body.name } }).then((community) => {
+    // if user doesn't exist in database, return an error
+    if (community) {
+      return res.status(401).json({ error: `Community name already used!` });
+    } 
+    Community.create({
+      name:req.body.name,
+      createdBy: userId,
+      members : userId,
+    })
+    .then(function (data) {
+      res.status(201).json({ message: "Community created" });
+
+      // return res;
+    })
+    .catch((error) => {
+      res.status(500).json({ error: "Bad request" })
+    });
+    
+  });
+
+
+
+
+
+
 };
 
 // ---------------------------------------------------------------------------

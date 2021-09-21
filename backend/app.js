@@ -14,6 +14,7 @@ require ('dotenv').config();
 // Call Routes files
 const authRoutes = require ('./routes/auth')
 const userRoutes = require ('./routes/user')
+const communitiesRoutes = require ('./routes/communities')
 // const userRoutes = require("./routes/user");
 // const sauceRoutes = require("./routes/sauces");
 
@@ -46,6 +47,7 @@ app.use(express.json());
 // Routes to user identification
 app.use("/api/auth", authRoutes); 
 app.use("/api/user", userRoutes); 
+app.use("/api/community", communitiesRoutes); 
 // app.use("/api/sauces", sauceRoutes); // Routes to sauces
 
 module.exports = app;

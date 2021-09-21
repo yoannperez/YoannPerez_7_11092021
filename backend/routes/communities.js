@@ -20,7 +20,7 @@ router.post("/", auth, communityCtrl.create);
 router.get("/", auth, communityCtrl.getAll); 
 router.get("/:id", auth, communityCtrl.getOne);  
 router.put("/:id", auth, communityCtrl.update);
-router.delete("/delete/:id", auth, communityCtrl.delete);
+router.delete("/:id", auth, communityCtrl.delete);
 
 //Export route
 module.exports = router;

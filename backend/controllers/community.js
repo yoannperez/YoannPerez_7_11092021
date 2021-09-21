@@ -17,13 +17,13 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 // Call user model
 const Community = require("../models/communities");
+const User = require("../models/user");
 
 // ---------------------------------------------------------------------------
 // ------------------------ Create community ------------------------
 // ---------------------------------------------------------------------------
 
 exports.create = (req, res) => {
-  console.log("Coucou Create");
   // -------- Find userid contained in the token -------------------
   const token = req.headers.authorization.split(" ")[1];
   // Use of verify function to decode token with the secret key
@@ -40,28 +40,21 @@ exports.create = (req, res) => {
     // if user doesn't exist in database, return an error
     if (community) {
       return res.status(401).json({ error: `Community name already used!` });
-    } 
+    }
     Community.create({
-      name:req.body.name,
+      name: req.body.name,
       createdBy: userId,
-      members : userId,
+      members: userId,
     })
-    .then(function (data) {
-      res.status(201).json({ message: "Community created" });
+      .then(function (data) {
+        res.status(201).json({ message: "Community created" });
 
-      // return res;
-    })
-    .catch((error) => {
-      res.status(500).json({ error: "Bad request" })
-    });
-    
+        // return res;
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Bad request" });
+      });
   });
-
-
-
-
-
-
 };
 
 // ---------------------------------------------------------------------------
@@ -69,7 +62,9 @@ exports.create = (req, res) => {
 // ---------------------------------------------------------------------------
 
 exports.getAll = (req, res) => {
-  console.log("Coucou GetALL");
+  Community.findAndCountAll()
+    .then((community) => res.status(200).json(community.rows))
+    .catch((error) => res.status(404).json({ error }));
 };
 
 // ---------------------------------------------------------------------------
@@ -77,7 +72,9 @@ exports.getAll = (req, res) => {
 // ---------------------------------------------------------------------------
 
 exports.getOne = (req, res) => {
-  console.log("Coucou GetOne");
+  Community.findOne({ where: { id: req.params.id } })
+    .then((community) => res.status(200).json(community))
+    .catch((error) => res.status(404).json({ error }));
 };
 
 // ---------------------------------------------------------------------------
@@ -85,13 +82,49 @@ exports.getOne = (req, res) => {
 // ---------------------------------------------------------------------------
 
 exports.update = (req, res) => {
-  console.log("Coucou update");
+  // -------- Find userid contained in the token -------------------
+  const token = req.headers.authorization.split(" ")[1];
+  // Use of verify function to decode token with the secret key
+  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+  // let get the user id contain in decoded Token
+  const userId = decodedToken.userId;
+
+  Community.update({ ...req.body }, { where: { id: req.params.id } })
+    .then(() => res.status(200).json({ message: "Community Modified!" }))
+    .catch((error) => res.status(400).json({ error: "Something is wrong" }));
 };
 
 // ---------------------------------------------------------------------------
-// ------------------------ Update one community ------------------------
+// ------------------------ Delete one community ------------------------
 // ---------------------------------------------------------------------------
 
 exports.delete = (req, res) => {
   console.log("Coucou delete");
+
+  // -------- Find userid contained in the token -------------------
+  const token = req.headers.authorization.split(" ")[1];
+  // Use of verify function to decode token with the secret key
+  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
+  // let get the user id contain in decoded Token
+  const userId = decodedToken.userId;
+
+  User.findOne({ where: { id: userId } })
+
+    .then((user) => {
+      let root = user.isAdmin;
+
+      Community.findOne({ where: { id: req.params.id } }).then((communitySaved) => {
+        if (communitySaved.createdBy == userId || root == true) {
+          Community.destroy({ where: { id: req.params.id } })
+          .then(function (data) {
+            res.status(200).json({ message: "Community Deleted" });
+          });
+        } else {
+          res.status(405).json({ error: "Vous n'êtes pas autorisé à supprimer cette communauté !" });
+        }
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({ message: "Something went wrong" });
+    });
 };

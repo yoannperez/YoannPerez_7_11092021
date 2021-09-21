@@ -30,9 +30,26 @@ const User = require("../models/user");
 
 exports.signup = (req, res, next) => {
   let isAdmin = false;
+  // Let see is req contains password
   if (!req.body.password) {
     return res.status(401).json({ error: `Password not valid` });
   }
+  // Let see is req contains username
+  if (!req.body.name) {
+    return res.status(401).json({ error: `Need to enter a valid user name` });
+  }
+  // Let see is req contains email
+  if (!req.body.email) {
+    return res.status(401).json({ error: `Need to enter a valid email adress` });
+  }
+
+  // Let see if username is allready taken
+  User.findOne({ where: { name: req.body.name } })
+    .then((user) => {
+      // if user doesn't exist in database, return an error
+      if (user) {
+        return res.status(401).json({ error: `Username already used!` });
+      }})
 
   User.findOne({ where: { email: req.body.email } })
     .then((user) => {

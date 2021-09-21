@@ -18,6 +18,8 @@ require("dotenv").config();
 // Call user model
 const User = require("../models/user");
 
+const fs = require("fs");
+
 //import model
 // const Countries = require("./models/Countries");
 // const { Op } = require("sequelize");
@@ -235,7 +237,21 @@ exports.updateUser = (req, res) => {
     .then((user) => {
       let root = user.isAdmin;
 
-      console.log("coucou")
+      const userObject = req.file
+      
+      // if req.file exists
+      ? {
+          ...JSON.parse(req.body.user),
+          imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+        }
+      // In case req.file doesn't exist
+      : { ...req.body };
+    
+    // then update User with userObjet informations
+    User.update({...req.body},{where: {id: req.params.id} })
+      .then(() => res.status(200).json({ message: "Modified!" }))
+      .catch((error) => res.status(400).json({ error }));
+      
     })
     .catch((error) => {
       res.status(404).json({ message: "Something went wrong" });

@@ -110,7 +110,6 @@ exports.delete = (req, res) => {
 
     .then((user) => {
       let root = user.isAdmin;
-
       Community.findOne({ where: { id: req.params.id } }).then((communitySaved) => {
         if (communitySaved.createdBy == userId || root == true) {
           Community.destroy({ where: { id: req.params.id } }).then(function (data) {
@@ -139,20 +138,18 @@ exports.subscribe = (req, res) => {
   const userId = decodedToken.userId;
 
   Community.findOne({ where: { id: req.params.id } }).then((community) => {
-    let members = community.members;
+    let members = Array.from(community.members.split(","));
+    array.push("133");
 
-    let array = Array.from(members.split(","));
-    console.log(array);
-
-    const index = array.indexOf('7');
-    if (index > -1) {
-      array.splice(index, 1);
-    }
-
-    // array.push('133')
+    // to unsubscribe
+    // const index = members.indexOf(userId);
+    // if (index > -1) {
+    //   array.splice(index, 1);
+    // }
 
     // let test = [3,4,5,6,7,8,9,99];
     // console.log(test)
+
     let tabtostring = array.toString();
 
     Community.update({ members: tabtostring }, { where: { id: req.params.id } })

@@ -17,8 +17,9 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 // Call user model
 const User = require("../models/user");
-
 const fs = require("fs");
+
+const globalFunc = require("../tools/func");
 
 //import model
 // const Countries = require("./models/Countries");
@@ -156,11 +157,8 @@ exports.getAll = (req, res) => {
 
 exports.getOne = (req, res) => {
   // -------- Find userid contained in the token -------------------
-  const token = req.headers.authorization.split(" ")[1];
-  // Use of verify function to decode token with the secret key
-  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-  // let get the user id contain in decoded Token
-  const userId = decodedToken.userId;
+  const userId = globalFunc.whatId(req);
+  console.log("Id from token : " + userId);
 
   User.findOne({ where: { id: userId } }).then((user) => {
     let root = user.isAdmin;
@@ -192,11 +190,8 @@ exports.getOne = (req, res) => {
 
 exports.delete = (req, res) => {
   // -------- Find userid contained in the token -------------------
-  const token = req.headers.authorization.split(" ")[1];
-  // Use of verify function to decode token with the secret key
-  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-  // let get the user id contain in decoded Token
-  const userId = decodedToken.userId;
+  const userId = globalFunc.whatId(req);
+  console.log("Id from token : " + userId);
 
   User.findOne({ where: { id: userId } })
 
@@ -206,11 +201,7 @@ exports.delete = (req, res) => {
       if (req.params.id == userId || root == true) {
         User.destroy({ where: { id: req.params.id } })
           .then(function (data) {
-            res.status(200).json({ token: jwt.sign(
-              { userId: user.id },
-              process.env.TOKEN_KEY,
-              { expiresIn: "1ms" }
-            ),message: "User Deleted" });
+            res.status(200).json({ token: jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, { expiresIn: "1ms" }), message: "User Deleted" });
           })
           .catch((error) => {
             res.status(401).json({ message: "Something went wrong - User not found !" });
@@ -232,30 +223,27 @@ exports.delete = (req, res) => {
 
 exports.updateUser = (req, res) => {
   // -------- Find userid contained in the token -------------------
-  const token = req.headers.authorization.split(" ")[1];
-  // Use of verify function to decode token with the secret key
-  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-  // let get the user id contain in decoded Token
-  const userId = decodedToken.userId;
+  const userId = globalFunc.whatId(req);
+  console.log("Id from token : " + userId);
 
   User.findOne({ where: { id: userId } })
 
     .then((user) => {
       let root = user.isAdmin;
       if (req.params.id == userId || root == true) {
-      const userObject = req.file
-        ? // if req.file exists
-          {
-            ...JSON.parse(req.body.user),
-            imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-          }
-        : // In case req.file doesn't exist
-          { ...req.body };
+        const userObject = req.file
+          ? // if req.file exists
+            {
+              ...JSON.parse(req.body.user),
+              imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+            }
+          : // In case req.file doesn't exist
+            { ...req.body };
 
-      // then update User with userObjet informations
-      User.update({ ...req.body }, { where: { id: req.params.id } })
-        .then(() => res.status(200).json({ message: "Modified!" }))
-        .catch((error) => res.status(400).json({ error }));
+        // then update User with userObjet informations
+        User.update({ ...req.body }, { where: { id: req.params.id } })
+          .then(() => res.status(200).json({ message: "Modified!" }))
+          .catch((error) => res.status(400).json({ error }));
       } else {
         res.status(404).json({ error: "Vous n'êtes pas autorisé à supprimer ce compte !" });
       }

@@ -16,6 +16,7 @@ require("dotenv").config();
 // Call user & Communities model
 const Community = require("../models/communities");
 const User = require("../models/user");
+const globalFunc = require("../tools/func");
 
 // ---------------------------------------------------------------------------
 // ------------------------      Create community     ------------------------
@@ -23,11 +24,8 @@ const User = require("../models/user");
 
 exports.create = (req, res) => {
   // -------- Find userid contained in the token -------------------
-  const token = req.headers.authorization.split(" ")[1];
-  // Use of verify function to decode token with the secret key
-  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-  // let get the user id contain in decoded Token
-  const userId = decodedToken.userId;
+  const userId = globalFunc.whatId(req);
+  console.log("Id from token : " + userId);
 
   if (!req.body.name) {
     return res.status(403).json({ error: `You need to give a name to your community` });
@@ -81,11 +79,8 @@ exports.getOne = (req, res) => {
 
 exports.update = (req, res) => {
   // -------- Find userid contained in the token -------------------
-  const token = req.headers.authorization.split(" ")[1];
-  // Use of verify function to decode token with the secret key
-  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-  // let get the user id contain in decoded Token
-  const userId = decodedToken.userId;
+  const userId = globalFunc.whatId(req);
+  console.log("Id from token : " + userId);
 
   Community.update({ ...req.body }, { where: { id: req.params.id } })
     .then(() => res.status(200).json({ message: "Community Modified!" }))
@@ -100,11 +95,8 @@ exports.delete = (req, res) => {
   console.log("Coucou delete");
 
   // -------- Find userid contained in the token -------------------
-  const token = req.headers.authorization.split(" ")[1];
-  // Use of verify function to decode token with the secret key
-  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-  // let get the user id contain in decoded Token
-  const userId = decodedToken.userId;
+  const userId = globalFunc.whatId(req);
+  console.log("Id from token : " + userId);
 
   User.findOne({ where: { id: userId } })
 
@@ -131,11 +123,8 @@ exports.delete = (req, res) => {
 
 exports.subscribe = (req, res) => {
   // -------- Find userid contained in the token -------------------
-  const token = req.headers.authorization.split(" ")[1];
-  // Use of verify function to decode token with the secret key
-  const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
-  // let get the user id contain in decoded Token
-  const userId = decodedToken.userId;
+  const userId = globalFunc.whatId(req);
+  console.log("Id from token : " + userId);
 
   Community.findOne({ where: { id: req.params.id } }).then((community) => {
     let members = Array.from(community.members.split(","));

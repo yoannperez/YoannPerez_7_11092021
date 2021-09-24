@@ -63,7 +63,7 @@ exports.signup = (req, res, next) => {
           isAdmin = true;
         }
       });
-      
+
       bcrypt
         // Create an encrypt hash from user's password, salted 10X
         .hash(req.body.password, 10)
@@ -197,16 +197,20 @@ exports.delete = (req, res) => {
   const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
   // let get the user id contain in decoded Token
   const userId = decodedToken.userId;
-  
+
   User.findOne({ where: { id: userId } })
-  
+
     .then((user) => {
       let root = user.isAdmin;
 
       if (req.params.id == userId || root == true) {
         User.destroy({ where: { id: req.params.id } })
           .then(function (data) {
-            res.status(200).json({ message: "User Deleted" });
+            res.status(200).json({ token: jwt.sign(
+              { userId: user.id },
+              process.env.TOKEN_KEY,
+              { expiresIn: "1ms" }
+            ),message: "User Deleted" });
           })
           .catch((error) => {
             res.status(401).json({ message: "Something went wrong - User not found !" });
@@ -220,7 +224,7 @@ exports.delete = (req, res) => {
     });
 };
 
-// Vérifier qu'on ne peut pas supprimer un compte admin existant ==> findAll 
+// Vérifier qu'on ne peut pas supprimer un compte admin existant ==> findAll
 
 // ---------------------------------------------------------------------------
 // -----------------------------  UPDATE User  -------------------------------
@@ -233,27 +237,28 @@ exports.updateUser = (req, res) => {
   const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
   // let get the user id contain in decoded Token
   const userId = decodedToken.userId;
-  
+
   User.findOne({ where: { id: userId } })
-  
+
     .then((user) => {
       let root = user.isAdmin;
-
+      if (req.params.id == userId || root == true) {
       const userObject = req.file
-      
-      // if req.file exists
-      ? {
-          ...JSON.parse(req.body.user),
-          imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-        }
-      // In case req.file doesn't exist
-      : { ...req.body };
-    
-    // then update User with userObjet informations
-    User.update({...req.body},{where: {id: req.params.id} })
-      .then(() => res.status(200).json({ message: "Modified!" }))
-      .catch((error) => res.status(400).json({ error }));
-      
+        ? // if req.file exists
+          {
+            ...JSON.parse(req.body.user),
+            imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+          }
+        : // In case req.file doesn't exist
+          { ...req.body };
+
+      // then update User with userObjet informations
+      User.update({ ...req.body }, { where: { id: req.params.id } })
+        .then(() => res.status(200).json({ message: "Modified!" }))
+        .catch((error) => res.status(400).json({ error }));
+      } else {
+        res.status(404).json({ error: "Vous n'êtes pas autorisé à supprimer ce compte !" });
+      }
     })
     .catch((error) => {
       res.status(404).json({ message: "Something went wrong" });

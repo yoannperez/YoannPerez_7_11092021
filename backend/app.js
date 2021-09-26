@@ -1,31 +1,32 @@
 //                                         -------------------------------------------------------
 //                                         --                EXPRESS APPLICATION                --
 //                                         -------------------------------------------------------
-
+//------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
 
 // Call modules
 const express = require("express");
 const path = require('path');
-
+const db = require("./models");
 
 // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 require ('dotenv').config();
 
-// Call Routes files
-const authRoutes = require ('./routes/auth')
-const userRoutes = require ('./routes/user')
-const communitiesRoutes = require ('./routes/communities')
-// const userRoutes = require("./routes/user");
-// const sauceRoutes = require("./routes/sauces");
+/// -------------- CALL ROUTES FILES --------------------------
+// const authRoutes = require ('./routes/auth')
+// const userRoutes = require ('./routes/user')
+// const communitiesRoutes = require ('./routes/communities')
+const userRoutes = require("./routes/user-routes");
+const profileRoutes = require("./routes/profile-routes")
+const postRoutes = require('./routes/post-routes')
+/// END OF :------- CALL ROUTES FILES --------------------------
 
 // Launch Xpress
 const app = express();
 
-
-
 // CORS Definition  
 app.use((req, res, next) => {
-  // Accpet oonnexions from everywhere
+  // Accpet connexions from everywhere
   res.setHeader("Access-Control-Allow-Origin", "*");
   // Add authorized headers
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
@@ -41,13 +42,19 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 // Define JSON Parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// SYNC SEQUELIZE
+db.sequelize.sync();
 
+/// -------------- DEFINE ROUTES --------------------------
+/// --------- FROM SEQUELIZE CLI --------------------------
+app.use("/api/users", userRoutes);
+app.use("/api/profiles", profileRoutes);
+app.use("/api/posts", postRoutes);
+/// --------- FROM SEQUELIZE CLI --------------------------
+// app.use("/api/auth", authRoutes); 
+// app.use("/api/user", userRoutes); 
+// app.use("/api/community", communitiesRoutes); 
+/// END OF : ----- DEFINE ROUTES --------------------------
 
-// Define Routes
-// Routes to user identification
-app.use("/api/auth", authRoutes); 
-app.use("/api/user", userRoutes); 
-app.use("/api/community", communitiesRoutes); 
-// app.use("/api/sauces", sauceRoutes); // Routes to sauces
 
 module.exports = app;

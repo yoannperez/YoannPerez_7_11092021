@@ -15,7 +15,7 @@ require("dotenv").config();
 /// -------------- CALL ROUTES FILES --------------------------
 const authRoutes = require("./routes/auth-routes");
 const userRoutes = require("./routes/user-routes");
-// const profileRoutes = require("./routes/profile-routes");
+const profileRoutes = require("./routes/profile-routes");
 const postRoutes = require("./routes/post-routes");
 /// END OF :------- CALL ROUTES FILES --------------------------
 
@@ -47,7 +47,7 @@ db.sequelize.sync();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-// app.use("/api/profiles", profileRoutes);
+app.use("/api/profiles", profileRoutes);
 app.use("/api/posts", postRoutes);
 
 // app.use("/api/user", userRoutes);

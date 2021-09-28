@@ -160,7 +160,9 @@ exports.login = (req, res) => {
 // --------------------------------------------------------------------------
 
 exports.getAll = (req, res) => {
-  db.User.findAndCountAll()
+  db.User.findAndCountAll(
+    // {include:[db.Profile]}
+    )
     .then((users) => res.status(200).json(users.rows))
     .catch((error) => res.status(404).json({ error }));
 };

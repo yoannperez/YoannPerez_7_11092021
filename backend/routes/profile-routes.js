@@ -1,19 +1,29 @@
+//                   -------------------------------------------------------
+//                   --                 ROUTES FOR PROFILE                --
+//                   -------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
 
-router.post("/new", (req, res) => {
-  db.Profile.create({
-    name: req.body.name,
-    UserId: req.body.UserId,
-  }).then((newProfile) => res.send(newProfile));
-});
+// // Call Middlewares
+const auth = require("../middleware/auth");
+const multer = require("../middleware/multer-config");
 
-router.get("/find/:id", (req, res) => {
-  db.Profile.findAll({
-    where: { 
-        UserId: req.params.id },
-        include:[db.User]
-  }).then((profile) => res.send(profile));
-});
+// // Import Controller
+const profileCtrl = require ("../controllers/profile-controller")
+
+
+// ------------    PROFILE ROUTES   --------------------
+
+router.post("/", profileCtrl.create);  // Ajouter Auth Middleware // Ajouter Multer Middleware
+router.get("/", profileCtrl.get);  // Ajouter Auth Middleware // Ajouter Multer Middleware
+router.get("/:id", profileCtrl.getOne); // Ajouter Auth Middleware // Ajouter Multer Middleware
+router.put("/:id", profileCtrl.update); // Ajouter Auth Middleware // Ajouter Multer Middleware
+router.delete("/:id", profileCtrl.delete); // Ajouter Auth Middleware // Ajouter Multer Middleware
+
+// END OF : ------------    PROFILE ROUTES   --------------------
+
 module.exports = router;

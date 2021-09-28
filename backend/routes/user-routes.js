@@ -18,8 +18,8 @@ const userCtrl = require("../controllers/user-controller");
 // // --------------- USERS route -------------------
 router.get("/", auth, userCtrl.getAll); //
 router.get("/:id", auth, userCtrl.getOne); //
-router.delete("/delete/:id", auth, userCtrl.delete);
 router.put("/:id", auth, multer, userCtrl.updateUser);
+router.delete("/delete/:id", auth, userCtrl.delete);
 
 
 module.exports = router;

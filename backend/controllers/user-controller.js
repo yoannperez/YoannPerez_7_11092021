@@ -16,14 +16,26 @@ const jwt = require("jsonwebtoken");
 // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 require("dotenv").config();
 // Call user model
-const User = require("../models/user");
+// const User = require("../models/user");
 const fs = require("fs");
-
+const db = require("../models");
 const globalFunc = require("../tools/func");
 
-//import model
-// const Countries = require("./models/Countries");
-// const { Op } = require("sequelize");
+
+// router.post("/new", (req, res) => {
+//   db.User.create({
+//     email: req.body.email,
+//     password: req.body.password,
+//   })
+//   .then((newUser) => res.send(newUser))
+    
+// });
+
+// router.get("/all", (req, res) => {
+//   db.User.findAll({
+//     include: [db.Profile, db.Post],
+//   }).then((allUsers) => res.send(allUsers));
+// });
 
 // ---------------------------------------------------------------------------
 // ------------------------ Création d'un utilisateur ------------------------
@@ -36,7 +48,7 @@ exports.signup = (req, res, next) => {
     return res.status(401).json({ error: `Password not valid` });
   }
   // Let see is req contains username
-  if (!req.body.name) {
+  if (!req.body.username) {
     return res.status(401).json({ error: `Need to enter a valid user name` });
   }
   // Let see is req contains email
@@ -45,21 +57,21 @@ exports.signup = (req, res, next) => {
   }
 
   // Let see if username is allready taken
-  User.findOne({ where: { name: req.body.name } }).then((user) => {
+  db.User.findOne({ where: { username: req.body.username } }).then((user) => {
     // if user doesn't exist in database, return an error
     if (user) {
       return res.status(401).json({ error: `Username already used!` });
     }
   });
 
-  User.findOne({ where: { email: req.body.email } })
+  db.User.findOne({ where: { email: req.body.email } })
     .then((user) => {
       // if user doesn't exist in database, return an error
       if (user) {
         return res.status(401).json({ error: `Email already exists in database!` });
       }
       // if it's the first user, set admin true
-      User.count().then((user) => {
+      db.User.count().then((user) => {
         if (user === 0) {
           isAdmin = true;
         }
@@ -70,13 +82,13 @@ exports.signup = (req, res, next) => {
         .hash(req.body.password, 10)
         // With Promise, create user from userSchema, add email from req, then add hash as password
         .then((hash) => {
-          const user = new User({
+          const user = new db.User({
             email: req.body.email,
             password: hash,
           });
           try {
-            const response = User.create({
-              name: req.body.name,
+            const response = db.User.create({
+              username: req.body.username,
               email: req.body.email,
               password: hash,
               isAdmin: isAdmin,
@@ -107,7 +119,7 @@ exports.signup = (req, res, next) => {
 // ---------------------------------------------------------------------------
 exports.login = (req, res) => {
   // Check in database if user exists
-  User.findOne({ where: { email: req.body.email } })
+  db.User.findOne({ where: { email: req.body.email } })
     .then((user) => {
       // if user doesn't exist in database, return an error
       if (!user) {
@@ -134,6 +146,8 @@ exports.login = (req, res) => {
               // Valid for 24h
               { expiresIn: "24h" }
             ),
+            email:user.email,
+            username:user.username,
           });
         })
         .catch((error) => res.status(500).json({ error: "bcrypt error, check password !" }));
@@ -146,7 +160,7 @@ exports.login = (req, res) => {
 // --------------------------------------------------------------------------
 
 exports.getAll = (req, res) => {
-  User.findAndCountAll()
+  db.User.findAndCountAll()
     .then((users) => res.status(200).json(users.rows))
     .catch((error) => res.status(404).json({ error }));
 };
@@ -160,19 +174,16 @@ exports.getOne = (req, res) => {
   const userId = globalFunc.whatId(req);
   console.log("Id from token : " + userId);
 
-  User.findOne({ where: { id: userId } }).then((user) => {
+  db.User.findOne({ where: { id: userId } }).then((user) => {
     let root = user.isAdmin;
     if (req.params.id == userId || root == true) {
-      User.findOne({ where: { id: req.params.id } })
+      db.User.findOne({ where: { id: req.params.id } })
         .then((user) =>
           res.status(200).json({
             id: user.id,
-            name: user.name,
+            username: user.username,
             email: user.email,
             password: user.password,
-            description: user.description,
-            imageUrl: user.imageUrl,
-            comunities_id: user.comunities_id,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           })
@@ -193,13 +204,13 @@ exports.delete = (req, res) => {
   const userId = globalFunc.whatId(req);
   console.log("Id from token : " + userId);
 
-  User.findOne({ where: { id: userId } })
+  db.User.findOne({ where: { id: userId } })
 
     .then((user) => {
       let root = user.isAdmin;
 
       if (req.params.id == userId || root == true) {
-        User.destroy({ where: { id: req.params.id } })
+        db.User.destroy({ where: { id: req.params.id } })
           .then(function (data) {
             res.status(200).json({ token: jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, { expiresIn: "1ms" }), message: "User Deleted" });
           })
@@ -226,7 +237,7 @@ exports.updateUser = (req, res) => {
   const userId = globalFunc.whatId(req);
   console.log("Id from token : " + userId);
 
-  User.findOne({ where: { id: userId } })
+  db.User.findOne({ where: { id: userId } })
 
     .then((user) => {
       let root = user.isAdmin;
@@ -241,7 +252,7 @@ exports.updateUser = (req, res) => {
             { ...req.body };
 
         // then update User with userObjet informations
-        User.update({ ...req.body }, { where: { id: req.params.id } })
+        db.User.update({ ...req.body }, { where: { id: req.params.id } })
           .then(() => res.status(200).json({ message: "Modified!" }))
           .catch((error) => res.status(400).json({ error }));
       } else {

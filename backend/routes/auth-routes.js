@@ -9,12 +9,12 @@ const express = require("express");
 const router = express.Router();
 
 //Import controller
-const userCtrl = require("../controllers/user");
+const userCtrl = require("../controllers/user-controller");
 
 // --------------- AUTH route -------------------
 
 router.post("/signup", userCtrl.signup);
-router.post("/login", userCtrl.login);
+router.post("/signin", userCtrl.login);
 
 //Export route
 module.exports = router;

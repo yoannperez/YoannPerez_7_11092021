@@ -1,8 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   const Profile = sequelize.define("Profile", {
+    
     description: {
       type: DataTypes.STRING,
-      defaultValue:"Dites nous en plus sur vous"
+      defaultValue:""
     },
     imageUrl: {
       type: DataTypes.STRING,

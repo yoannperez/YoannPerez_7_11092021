@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
-      defaultValue:false,
+      defaultValue: false,
     },
   });
   User.associate = (models) => {
@@ -24,12 +24,9 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.hasOne(models.Profile, {
-        onDelete: "cascade",
-      });
-
+      onDelete: "cascade",
+    });
   };
-
-  
 
   return User;
 };

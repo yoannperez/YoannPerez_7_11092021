@@ -50,7 +50,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/profiles", profileRoutes);
 app.use("/api/posts", postRoutes);
 
-// app.use("/api/user", userRoutes);
+
 // app.use("/api/community", communitiesRoutes);
 /// END OF : ----- DEFINE ROUTES --------------------------
 

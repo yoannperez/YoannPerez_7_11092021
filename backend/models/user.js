@@ -17,16 +17,24 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    description: {
+      type: DataTypes.STRING,
+      defaultValue:""
+    },
+    imageUrl: {
+      type: DataTypes.STRING,
+      defaultValue:"http://localhost:3000/images/default-user.jpg"
+    },
   });
-  User.associate = (models) => {
-    User.hasMany(models.Post, {
-      onDelete: "cascade",
-    });
+  // User.associate = (models) => {
+  //   User.hasMany(models.Post, {
+  //     onDelete: "cascade",
+  //   });
 
-    User.hasOne(models.Profile, {
-      onDelete: "cascade",
-    });
-  };
+  //   User.hasOne(models.Profile, {
+  //     onDelete: "cascade",
+  //   });
+  // };
 
   return User;
 };

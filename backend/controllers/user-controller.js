@@ -22,21 +22,6 @@ const db = require("../models");
 const globalFunc = require("../tools/func");
 
 
-// router.post("/new", (req, res) => {
-//   db.User.create({
-//     email: req.body.email,
-//     password: req.body.password,
-//   })
-//   .then((newUser) => res.send(newUser))
-    
-// });
-
-// router.get("/all", (req, res) => {
-//   db.User.findAll({
-//     include: [db.Profile, db.Post],
-//   }).then((allUsers) => res.send(allUsers));
-// });
-
 // ---------------------------------------------------------------------------
 // ------------------------ Création d'un utilisateur ------------------------
 // ---------------------------------------------------------------------------
@@ -186,6 +171,8 @@ exports.getOne = (req, res) => {
             username: user.username,
             email: user.email,
             password: user.password,
+            description:user.description,
+            imageUrl: user.imageUrl,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           })
@@ -238,27 +225,28 @@ exports.updateUser = (req, res) => {
   // -------- Find userid contained in the token -------------------
   const userId = globalFunc.whatId(req);
   console.log("Id from token : " + userId);
-
+  
   db.User.findOne({ where: { id: userId } })
-
-    .then((user) => {
-      let root = user.isAdmin;
-      if (req.params.id == userId || root == true) {
+  
+  .then((user) => {
+    let root = user.isAdmin;
+    
+    if (req.params.id == userId || root == true) {
+        
         const userObject = req.file
           ? // if req.file exists
-            {
-              ...JSON.parse(req.body.user),
-              imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+            {...JSON.parse(req.body.user), imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
             }
           : // In case req.file doesn't exist
-            { ...req.body };
+            { ...req.body.user };
+            
 
         // then update User with userObjet informations
-        db.User.update({ ...req.body }, { where: { id: req.params.id } })
+        db.User.update({ ...userObject }, { where: { id: req.params.id } })
           .then(() => res.status(200).json({ message: "Modified!" }))
           .catch((error) => res.status(400).json({ error }));
       } else {
-        res.status(404).json({ error: "Vous n'êtes pas autorisé à supprimer ce compte !" });
+        res.status(404).json({ error: "Vous n'êtes pas autorisé à Modifier ce compte !" });
       }
     })
     .catch((error) => {

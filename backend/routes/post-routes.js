@@ -14,14 +14,14 @@ const auth = require("../middleware/auth");
 const multer = require("../middleware/multer-config");
 
 // // Import Controller
-const postCtrl = require ("../controllers/post-controller")
+const postCtrl = require("../controllers/post-controller");
 
 // ------------    PROFILE ROUTES   --------------------
-router.post("/new", postCtrl.create);  // Ajouter Auth Middleware 
-router.get("/find", postCtrl.get);  // Ajouter Auth Middleware 
-router.get("/find/:id", postCtrl.getOne); // Ajouter Auth Middleware 
-router.put("/:id", postCtrl.update); // Ajouter Auth Middleware 
-router.delete("/:id", postCtrl.delete); // Ajouter Auth Middleware 
+router.post("/new", auth, postCtrl.create); // Ajouter Auth Middleware
+router.get("/find", auth, postCtrl.get); // Ajouter Auth Middleware
+router.get("/find/:id", auth, postCtrl.getOne); // Ajouter Auth Middleware
+router.put("/:id", auth, postCtrl.update); // Ajouter Auth Middleware
+router.delete("/:id", auth, postCtrl.delete); // Ajouter Auth Middleware
 
 // END OF : ------------    PROFILE ROUTES   --------------------
 

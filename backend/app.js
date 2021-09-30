@@ -41,10 +41,10 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // SYNC SEQUELIZE (NORMAL MODE)
-// db.sequelize.sync();
+db.sequelize.sync();
 
 // SYNC SEQUELIZE (FORCED MODE)
-db.sequelize.sync({ force: true })
+// db.sequelize.sync({ force: true })
 
 
 /// -------------- DEFINE ROUTES --------------------------

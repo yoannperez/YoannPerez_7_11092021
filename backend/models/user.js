@@ -1,6 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define("User", {
-    
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -24,27 +23,24 @@ module.exports = (sequelize, DataTypes) => {
 
     description: {
       type: DataTypes.STRING,
-      defaultValue:""
+      defaultValue: "",
     },
 
     imageUrl: {
       type: DataTypes.STRING,
-      defaultValue:"http://localhost:3000/images/default-user.jpg"
+      defaultValue: "http://localhost:3000/images/default-user.jpg",
     },
-
   });
-  
+
   User.associate = (models) => {
     User.hasMany(models.Post, {
-      foreignKey : 'id',
       onDelete: "cascade",
     });
-    Post.belongTo(User);
-
-    // User.hasOne(models.Profile, {
-    //   onDelete: "cascade",
-    // });
+    User.hasMany(models.Commentaire, {
+      onDelete: "cascade",
+    });
   };
+  
 
   return User;
 };

@@ -31,7 +31,7 @@ exports.create  = (req, res) => {
 // ---------------------------------------------------------------------------
 exports.get  = (req, res) => {
   db.Post.findAll({
-    include:[db.User]
+    include:[db.User, db.Commentaire]
   }).then((post) => res.send(post));
 
   };

@@ -12,11 +12,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: {
         allowNull: false,
       },
-    })
-    Post.belongsToMany(models.Comments,{
-      through: 'PostComments'
+    });
+
+    Post.hasMany(models.Commentaire, {
+      // through: "PostComments",
+      foreignKey: {
+        allowNull: true,
       },
-    )
+    });
   };
 
   return Post;

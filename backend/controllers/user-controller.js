@@ -146,7 +146,7 @@ exports.login = (req, res) => {
 
 exports.getAll = (req, res) => {
   db.User.findAndCountAll(
-    // {include:[db.Profile]}
+    {include:[db.Post, db.Commentaire]}
     )
     .then((users) => res.status(200).json(users.rows))
     .catch((error) => res.status(404).json({ error }));

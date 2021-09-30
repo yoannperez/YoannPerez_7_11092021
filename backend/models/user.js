@@ -34,15 +34,17 @@ module.exports = (sequelize, DataTypes) => {
 
   });
   
-  // User.associate = (models) => {
-  //   User.hasMany(models.Post, {
-  //     onDelete: "cascade",
-  //   });
+  User.associate = (models) => {
+    User.hasMany(models.Post, {
+      foreignKey : 'id',
+      onDelete: "cascade",
+    });
+    Post.belongTo(User);
 
-  //   User.hasOne(models.Profile, {
-  //     onDelete: "cascade",
-  //   });
-  // };
+    // User.hasOne(models.Profile, {
+    //   onDelete: "cascade",
+    // });
+  };
 
   return User;
 };

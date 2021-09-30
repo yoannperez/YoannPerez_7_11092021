@@ -40,8 +40,12 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 // Define JSON Parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// SYNC SEQUELIZE
-db.sequelize.sync();
+// SYNC SEQUELIZE (NORMAL MODE)
+// db.sequelize.sync();
+
+// SYNC SEQUELIZE (FORCED MODE)
+db.sequelize.sync({ force: true })
+
 
 /// -------------- DEFINE ROUTES --------------------------
 

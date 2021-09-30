@@ -22,11 +22,10 @@ const storage = multer.diskStorage({
   filename: (req, file, callback) => {
 
     // Prevent server's error deleting space in file names and replace by underscores
-    const name = file.originalname.split(' ').join('_');
-
+    const name = file.originalname.split(' ').join('_').split('.')[0];
     const extension = MIME_TYPES[file.mimetype];
     // Define filename, use file original name, a timestamp, and extension defined by MIME_TYPES
-    callback(null, name + Date.now() + '.' + extension);
+    callback(null, name + '_' + Date.now() + '.' + extension);
   }
 });
 

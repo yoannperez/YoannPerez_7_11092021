@@ -20,10 +20,12 @@ exports.create = (req, res) => {
   // console.log("Comments-Create");
   console.log(req.body);
   db.Commentaire.create({
-    commentaire: req.body.commentaire,
-    UserId: req.body.UserId,
-    PostId: req.body.PostId,
-  }).then((commentaire) => res.send(commentaire));
+    ...req.body
+    // commentaire: req.body.commentaire,
+    // UserId: req.body.UserId,
+    // PostId: req.body.PostId,
+  }).then((commentaire) => res.send(commentaire))
+  .catch((error) => res.status(400).json({ error : "Not Authorized !"}));
 };
 
 //

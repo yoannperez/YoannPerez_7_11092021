@@ -54,8 +54,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/comments", commentsRoutes);
 app.use("/api/posts", postRoutes);
 
-
-// app.use("/api/community", communitiesRoutes);
 /// END OF : ----- DEFINE ROUTES --------------------------
 
 module.exports = app;

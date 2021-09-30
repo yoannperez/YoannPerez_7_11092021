@@ -238,7 +238,7 @@ exports.updateUser = (req, res) => {
             {...JSON.parse(req.body.user), imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
             }
           : // In case req.file doesn't exist
-            { ...req.body.user };
+            { ...req.body};
             
 
         // then update User with userObjet informations

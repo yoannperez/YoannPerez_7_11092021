@@ -28,22 +28,32 @@ exports.create = (req, res) => {
 // ---------------------------------------------------------------------------
 exports.get = (req, res) => {
   db.Post.findAll({
-    include: [db.User, db.Commentaire],
-  }).then((post) => {
-    res.send(post);
-  });
+    // include: [db.User, db.Commentaire],
+    include: [db.User],
+  }).then((post) => {res.send(post)})
+    // .then(((truc) => console.log(truc.toJSON())));
 };
 
 // ---------------------------------------------------------------------------
 // ------------------------           READ            ------------------------
 // ---------------------------------------------------------------------------
 exports.getOne = (req, res) => {
-  db.Post.findAll({
+  db.Post.findOne({
     where: {
-      UserId: req.params.id,
+      id: req.params.id,
     },
-    include: [db.User, db.Commentaire],
-  }).then((post) => res.send(post));
+    // include: [db.User, db.Commentaire],
+    include: [db.User],
+  }).then((post) => {
+    // let message = {
+    //   id:;
+    //   text:;
+
+    // };
+    // console.log(JSON.stringify(post.User.username));
+    res.send(post);
+
+  });
 };
 
 // ---------------------------------------------------------------------------

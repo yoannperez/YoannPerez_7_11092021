@@ -11,7 +11,7 @@ const db = require("../models");
 
 // // Call Middlewares
 const auth = require("../middleware/auth");
-const multer = require("../middleware/multer-config");
+// const multer = require("../middleware/multer-config");
 
 // // Import Controller
 const postCtrl = require("../controllers/post-controller");

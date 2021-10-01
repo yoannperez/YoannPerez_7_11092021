@@ -8,17 +8,14 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Post.associate = (models) => {
-    // Post.belongsTo(models.User, {
-    //   foreignKey: {
-    //     allowNull: false,
-    //   },
-    // });
-    Post.belongsTo(models.User,{
+    Post.belongsTo(models.User, {
       onDelete: "CASCADE",
-    }
-      
-      
-      );
+    });
+
+    Post.hasMany(models.Commentaire, {
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
 
     // Post.hasMany(models.Commentaire, {
     //   // through: "PostComments",

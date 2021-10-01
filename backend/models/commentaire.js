@@ -7,19 +7,20 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // Commentaire.associate = (models) => {
-    
-  //   Commentaire.belongsTo(models.User, {
-  //     foreignKey: {
-  //       allowNull: false,
-  //     },
-  //   });
-  //   Commentaire.belongsTo(models.Post, {
-  //     foreignKey: {
-  //       allowNull: false,
-  //     },
-  //   });
-  // };
+  Commentaire.associate = (models) => {
+    Commentaire.belongsTo(models.User, {
+      foreignKey: {
+        allowNull: false,
+      },
+      onDelete: "CASCADE",
+    });
+    Commentaire.belongsTo(models.Post, {
+      foreignKey: {
+        allowNull: false,
+      },
+      onDelete: "CASCADE",
+    });
+  };
 
   return Commentaire;
 };

@@ -28,8 +28,8 @@ exports.create = (req, res) => {
 // ---------------------------------------------------------------------------
 exports.get = (req, res) => {
   db.Post.findAll({
-    // include: [db.User, db.Commentaire],
-    include: [db.User],
+    include: [db.User, db.Commentaire],
+    // include: [db.User],
   }).then((post) => {res.send(post)})
     // .then(((truc) => console.log(truc.toJSON())));
 };
@@ -42,8 +42,8 @@ exports.getOne = (req, res) => {
     where: {
       id: req.params.id,
     },
-    // include: [db.User, db.Commentaire],
-    include: [db.User],
+    include: [db.User, db.Commentaire],
+    // include: [db.User],
   }).then((post) => {
     // let message = {
     //   id:;

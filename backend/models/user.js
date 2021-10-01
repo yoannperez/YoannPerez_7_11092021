@@ -33,35 +33,19 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "http://localhost:3000/images/default-user.jpg",
     },
 
-    // PostsIds:{
-    //   allowNull:true,
-    //   type :DataTypes.INTEGER,
-    //   onDelete: 'CASCASDE',
-    //   references:{
-    //     model:'Post',
-    //     key:'UserId'
-    //   }
-    // }
   });
 
   User.associate = (models) => {
-    // User.hasMany(models.Post, {
-    //   foreignKey:'UserId',
-    //   as: 'Post',
-    //   constraints:false,
-    //   allowNull:true,
-    //   defaultValue:null,
-    //   onDelete: "cascade",
-    // });
+    
     User.hasMany(models.Post, {
       foreignKey: "UserId",
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     });
 
-    // User.hasMany(models.Commentaire, {
-    //   onDelete: "cascade",
-    // });
+    User.hasMany(models.Commentaire, {
+      onDelete: "CASCADE",
+    });
   };
 
   return User;

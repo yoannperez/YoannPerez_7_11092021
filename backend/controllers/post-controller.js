@@ -42,8 +42,8 @@ exports.getOne = (req, res) => {
     where: {
       id: req.params.id,
     },
-    include: [db.User, db.Commentaire],
-    // include: [db.User],
+    // include: [db.User, db.Commentaire],
+    include: [db.User],
   }).then((post) => {
     // let message = {
     //   id:;

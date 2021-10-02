@@ -15,8 +15,8 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 // Call user & Communities model
 const Community = require("../models/communities");
-const User = require("../models/user");
-const globalFunc = require("../tools/func");
+const User = require("../../models/user");
+const globalFunc = require("../../tools/func");
 
 // ---------------------------------------------------------------------------
 // ------------------------      Create community     ------------------------

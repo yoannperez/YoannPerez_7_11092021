@@ -9,8 +9,8 @@
 require("dotenv").config();
 
 const fs = require("fs");
-const db = require("../models");
-const globalFunc = require("../tools/func");
+const db = require("../../models");
+const globalFunc = require("../../tools/func");
 
 
 // ---------------------------------------------------------------------------

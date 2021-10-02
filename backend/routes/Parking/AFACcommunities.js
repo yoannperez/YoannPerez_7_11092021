@@ -9,11 +9,11 @@ const express = require("express");
 const router = express.Router();
 
 // Call Middlewares
-const auth = require("../middleware/auth");
+const auth = require("../../middleware/auth");
 // const multer = require("../middleware/multer-config");
 
 //Import controller
-const communityCtrl = require("../controllers/community");
+const communityCtrl = require("../../controllers/Parking/community");
 
 // --------------- Community routes -------------------
 router.post("/", auth, communityCtrl.create);

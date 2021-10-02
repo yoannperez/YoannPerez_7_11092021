@@ -42,18 +42,6 @@ exports.get = (req, res) => {
   .catch((error) => res.status(404).json({ error }));
 };
 
-// ---------------------------------------------------------------------------
-// ------------------------           READ            ------------------------
-// ---------------------------------------------------------------------------
-exports.getOne = (req, res) => {
-  console.log("Comments-Get One");
-  // db.Commentaire.findAll({
-  //   where: {
-  //       UserId: req.params.id },
-  //       include:[db.User]
-  // }).then((profile) => res.send(profile))
-  // .catch((error) => res.status(404).json({ error }));
-};
 
 // ---------------------------------------------------------------------------
 // ------------------------         UPDATE            ------------------------
@@ -70,12 +58,11 @@ exports.update = (req, res) => {
 // ---------------------------------------------------------------------------
 
 exports.delete = (req, res) => {
-  console.log("Comments-Delete");
-  // db.Commentaire.destroy({ where: { id: req.params.id } })
-  //       .then(function (data) {
-  //         res.status(200).json({ message: "Profile Deleted"});
-  //       })
-  //       .catch((error) => {
-  //         res.status(401).json({ message: "Something went wrong - User not found !" });
-  //       });
+  db.Commentaire.destroy({ where: { id: req.params.id } })
+        .then(function (data) {
+          res.status(200).json({ message: "Comment Deleted"});
+        })
+        .catch((error) => {
+          res.status(401).json({ message: "Something went wrong !" });
+        });
 };

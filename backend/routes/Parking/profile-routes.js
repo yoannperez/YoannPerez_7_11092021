@@ -6,14 +6,14 @@
 // -----------------------------------------------------------------------------------------------
 const express = require("express");
 const router = express.Router();
-const db = require("../models");
+const db = require("../../models");
 
 // // Call Middlewares
-const auth = require("../middleware/auth");
-const multer = require("../middleware/multer-config");
+const auth = require("../../middleware/auth");
+const multer = require("../../middleware/multer-config");
 
 // // Import Controller
-const profileCtrl = require ("../controllers/profile-controller")
+const profileCtrl = require ("../../controllers/profile-controller")
 
 
 // ------------    PROFILE ROUTES   --------------------

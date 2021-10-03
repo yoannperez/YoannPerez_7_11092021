@@ -46,7 +46,6 @@ db.sequelize.sync();
 // SYNC SEQUELIZE (FORCED MODE)
 // db.sequelize.sync({ force: true })
 
-
 /// -------------- DEFINE ROUTES --------------------------
 
 app.use("/api/auth", authRoutes);

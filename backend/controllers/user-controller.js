@@ -123,6 +123,7 @@ exports.login = (req, res) => {
           // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
           res.status(200).json({
             userId: user.id,
+            imageUrl : user.imageUrl,
             token: jwt.sign(
               // Token created with userId
               { userId: user.id },

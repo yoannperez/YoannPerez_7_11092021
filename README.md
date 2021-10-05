@@ -5,7 +5,15 @@ Vous trouverez dans ce repo les fichiers rendus pour la soutenace du projet 07 \
 ***
 
 
+git clone https://github.com/yoannperez/YoannPerez_7_11092021.git
 
+
+La commande 
+"git submodule init "
+récupère les liens vers les sous-modules inclus dans votre projet. 
+La commande 
+"git submodule update "
+importe les fichiers des sous-modules dans leurs répertoires effectifs et dans la version annotée dans votre projet mère.
 
 
 

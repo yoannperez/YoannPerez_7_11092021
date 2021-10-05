@@ -15,9 +15,13 @@ La commande
 "git submodule update "
 importe les fichiers des sous-modules dans leurs répertoires effectifs et dans la version annotée dans votre projet mère.
 
+Installer les dépendances ==> npm run installation
 
+Dans backend/config/config.json ==> configurer les accès au serveur mysql
 
+le .env va à la racine, à côté du README
 
+Si vous désirer une bdd de test vous pouvez utiliser de free4db
 
 
 

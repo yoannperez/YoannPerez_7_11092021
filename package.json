@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start":"(cd backend & nodemon server)",
-    "inst":"(cd backend & npm install) && (cd ..) && (cd frontend & npm install)",
+    "installation":"(cd backend & npm install) && (cd ..) && (cd frontend & npm install)",
     "startback": "(cd backend & nodemon server)",
     "startfront": "(cd frontend & npm start)"
   },

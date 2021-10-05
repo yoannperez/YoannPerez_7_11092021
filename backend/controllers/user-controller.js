@@ -164,17 +164,25 @@ exports.getOne = (req, res) => {
   db.User.findOne({ where: { id: userId } }).then((user) => {
     let root = user.isAdmin;
     if (req.params.id == userId || root == true) {
-      db.User.findOne({ where: { id: req.params.id } })
+      db.User.findOne({ 
+        where: { 
+        id: req.params.id },
+        attributes: {
+          exclude: ['password']
+      },
+        
+       })
         .then((user) =>
           res.status(200).json({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            password: user.password,
-            description:user.description,
-            imageUrl: user.imageUrl,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
+            user
+            // id: user.id,
+            // username: user.username,
+            // email: user.email,
+            // password: user.password,
+            // description:user.description,
+            // imageUrl: user.imageUrl,
+            // createdAt: user.createdAt,
+            // updatedAt: user.updatedAt,
           })
         )
         .catch((error) => res.status(404).json({ error }));

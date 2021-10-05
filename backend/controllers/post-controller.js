@@ -43,7 +43,9 @@ exports.getOne = (req, res) => {
       id: req.params.id,
     },
     // include: [db.User, db.Commentaire],
-    include: [db.User],
+    include: {
+      model: db.User,
+      attributes:['username']}
   }).then((post) => {
     // let message = {
     //   id:;
@@ -53,7 +55,8 @@ exports.getOne = (req, res) => {
     // console.log(JSON.stringify(post.User.username));
     res.send(post);
 
-  });
+  })
+  .catch((err) => console.log(err));
 };
 
 // ---------------------------------------------------------------------------

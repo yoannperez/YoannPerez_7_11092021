@@ -37,6 +37,9 @@ exports.get = (req, res) => {
   db.Commentaire.findAll({
     where: {
             PostId: req.params.id },
+            include: {
+              model: db.User,
+              attributes:['username']}
             
   }).then((profile) => res.send(profile))
   .catch((error) => res.status(404).json({ error }));

@@ -239,19 +239,25 @@ exports.updateUser = (req, res) => {
   db.User.findOne({ where: { id: userId } })
   
   .then((user) => {
+    
     let root = user.isAdmin;
     
     if (req.params.id == userId || root == true) {
-        
+      
+        console.log(req.body)
         const userObject = req.file
           ? // if req.file exists
-            {...JSON.parse(req.body.user), imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+            {
+              // ...JSON.parse(req.body.user), 
+              // imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+              imageUrl: `http://localhost:3000/images/${req.file.filename}`,
             }
           : // In case req.file doesn't exist
             { ...req.body};
             
 
         // then update User with userObjet informations
+        
         db.User.update({ ...userObject }, { where: { id: req.params.id } })
           .then(() => res.status(200).json({ message: "Modified!" }))
           .catch((error) => res.status(400).json({ error }));

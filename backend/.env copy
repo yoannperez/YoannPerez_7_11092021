@@ -1,0 +1,7 @@
+TOKEN_KEY = AhwDyZtJcuJqfvBNeGHinqwt5jGCK6o5
+
+SQL_SERVER = localhost
+SQL_PORT = 8889
+SQL_DATABASE = Groupomania
+SQL_USER = root
+SQL_PASSWORD = root

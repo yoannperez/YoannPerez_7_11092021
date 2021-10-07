@@ -1,11 +1,10 @@
-//                                         -------------------------------------------------------
-//                                         --                 POSTS CONTROLLER                  --
-//                                         -------------------------------------------------------
-// -----------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------
+//                     -------------------------------------------------------
+//                     --                 POSTS CONTROLLER                  --
+//                     -------------------------------------------------------
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 
-// Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 require("dotenv").config();
 
 const fs = require("fs");
@@ -20,7 +19,11 @@ exports.create = (req, res) => {
   db.Post.create({
     text: req.body.text,
     UserId: req.body.UserId,
-  }).then((newPost) => res.send(newPost));
+  })
+    .then((newPost) => res.send(newPost))
+    .catch((error) => {
+      res.status(400).json({ message: "Something went wrong" });
+    });
 };
 
 // ---------------------------------------------------------------------------
@@ -28,10 +31,21 @@ exports.create = (req, res) => {
 // ---------------------------------------------------------------------------
 exports.get = (req, res) => {
   db.Post.findAll({
-    include: [db.User, db.Commentaire],
-    // include: [db.User],
-  }).then((post) => {res.send(post)})
-    // .then(((truc) => console.log(truc.toJSON())));
+    // include: [db.User, db.Commentaire],
+    include: [
+      db.Commentaire,
+      {
+        model: db.User,
+        attributes: ["username"],
+      },
+    ],
+  })
+    .then((post) => {
+      res.send(post);
+    })
+    .catch((error) => {
+      res.status(400).json({ message: "Something went wrong" });
+    });
 };
 
 // ---------------------------------------------------------------------------
@@ -45,18 +59,15 @@ exports.getOne = (req, res) => {
     // include: [db.User, db.Commentaire],
     include: {
       model: db.User,
-      attributes:['username']}
-  }).then((post) => {
-    // let message = {
-    //   id:;
-    //   text:;
-
-    // };
-    // console.log(JSON.stringify(post.User.username));
-    res.send(post);
-
+      attributes: ["username"],
+    },
   })
-  .catch((err) => console.log(err));
+    .then((post) => {
+      res.send(post);
+    })
+    .catch((e) => {
+      res.status(400).json({ message: "Something went wrong" });
+    });
 };
 
 // ---------------------------------------------------------------------------

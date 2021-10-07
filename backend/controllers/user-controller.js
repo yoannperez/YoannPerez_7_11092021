@@ -165,6 +165,7 @@ exports.getOne = (req, res) => {
   db.User.findOne({ where: { id: userId } }).then((user) => {
     let root = user.isAdmin;
     if (req.params.id == userId || root == true) {
+
       db.User.findOne({ 
         where: { 
         id: req.params.id },
@@ -176,19 +177,11 @@ exports.getOne = (req, res) => {
         .then((user) =>
           res.status(200).json({
             user
-            // id: user.id,
-            // username: user.username,
-            // email: user.email,
-            // password: user.password,
-            // description:user.description,
-            // imageUrl: user.imageUrl,
-            // createdAt: user.createdAt,
-            // updatedAt: user.updatedAt,
           })
         )
         .catch((error) => res.status(404).json({ error }));
     } else {
-      res.status(404).json({ error: "You are not authorized !" });
+      res.status(404).json({ error: "Error not authorized !" });
     }
   });
 };
@@ -218,10 +211,10 @@ exports.delete = (req, res) => {
             res.status(200).json({ token: jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, { expiresIn: "1ms" }), message: "User Deleted" });
           })
           .catch((error) => {
-            res.status(401).json({ message: "Something went wrong - User not found !" });
+            res.status(401).json({ message: "Something went wrong" });
           });
       } else {
-        res.status(404).json({ error: "Vous n'êtes pas autorisé à supprimer ce compte !" });
+        res.status(404).json({ error: "Error not authorized !" });
       }
     })
     .catch((error) => {
@@ -267,7 +260,7 @@ exports.updateUser = (req, res) => {
           .then(() => res.status(200).json({ message: "Modified!" }))
           .catch((error) => res.status(400).json({ error }));
       } else {
-        res.status(404).json({ error: "Vous n'êtes pas autorisé à Modifier ce compte !" });
+        res.status(404).json({ error: "Error not authorized !" });
       }
     })
     .catch((error) => {
@@ -275,128 +268,3 @@ exports.updateUser = (req, res) => {
     });
 };
 
-// --------------------------------------------------------------------------
-// -------------------------------  PARKING  --------------------------------
-// --------------------------------------------------------------------------
-
-// controller.list = async (req, res) => {
-//   try {
-//     const response = await Customers.findAll({
-//       // include : [Countries]
-//       // include: [
-//       //   {
-//       //     model: Countries,
-//       //     where: { name: "Colombia" },
-//       //   }]
-//       include: [
-//         {
-//           model: Countries,
-//           attributes: ["name"],
-//         },
-//       ],
-//     })
-//       .then(function (data) {
-//         const res = { success: true, message: "Load successful", data: data };
-//         return res;
-//       })
-//       .catch((error) => {
-//         const res = { success: false, error: error };
-//         return res;
-//       });
-
-//     return res.json(response);
-//   } catch (error) {
-//     console.log("Error controller.list");
-//     console.log(error);
-//   }
-// };
-
-// //Filtrer par pays
-// controller.listCountries = async (req, res) => {
-//   try {
-//     const response = await Countries.findAll({
-//       include: ["getCustomers"],
-//       // include: [
-//       //   {
-//       //     model: getCustomers,
-//       //     attributes: ["name"],
-//       //   },
-//       // ],
-//     })
-
-//       .then(function (data) {
-//         const res = { success: true, message: "Load successful", data: data };
-//         return res;
-//       })
-//       .catch((error) => {
-//         const res = { success: false, error: error };
-//         return res;
-//       });
-
-//     return res.json(response);
-//   } catch (error) {
-//     console.log("Error controller.list");
-//     console.log(error);
-//   }
-// };
-
-// //mise à jour d'un utilisateur
-// controller.update = async (req, res) => {
-//   try {
-//     const idCustomer = 3;
-//     const response = await Customers.update(
-//       {
-//         name: "This is my correction",
-//         email: "email@email.com",
-//         address: "Avenidad de News",
-//         phone: "187654321",
-//       },
-//       {
-//         where: {
-//           id: idCustomer,
-//         },
-//       }
-//     )
-//       .then(function (data) {
-//         const res = {
-//           succes: true,
-//           message: "Update successful",
-//           data: data,
-//         };
-//         return res;
-//       })
-//       .catch((error) => {
-//         const res = { success: false, error: error };
-//         return res;
-//       });
-//     res.json(response);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// // Get one customer
-// controller.get = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const response = await Customers.findAll({
-//       where: { id: id },
-//       //   where:{
-//       //       name:{
-//       //           [Op.like]: "%This%"
-//       //       }
-//       //   }
-//     })
-//       .then(function (data) {
-//         const res = { succes: true, data: data };
-//         return res;
-//       })
-//       .catch((error) => {
-//         const res = { success: false, error: error };
-//         return res;
-//       });
-//     res.json(response);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };

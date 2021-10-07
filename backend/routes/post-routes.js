@@ -17,9 +17,9 @@ const auth = require("../middleware/auth");
 const postCtrl = require("../controllers/post-controller");
 
 // ------------    PROFILE ROUTES   --------------------
-router.post("/new", auth, postCtrl.create); 
-router.get("/find", auth, postCtrl.get); 
-router.get("/find/:id", auth, postCtrl.getOne); 
+router.post("/", auth, postCtrl.create); 
+router.get("/", auth, postCtrl.get); 
+router.get("/:id", auth, postCtrl.getOne); 
 router.put("/:id", auth, postCtrl.update); 
 router.delete("/:id", auth, postCtrl.delete); 
 

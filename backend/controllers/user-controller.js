@@ -1,9 +1,9 @@
-//                                         -------------------------------------------------------
-//                                         --                  USER CONTROLLER                  --
-//                                         -------------------------------------------------------
-// -----------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------
+//                    -------------------------------------------------------
+//                    --                  USER CONTROLLER                  --
+//                    -------------------------------------------------------
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 "use strict";
 //--------------------------------------------------
@@ -20,7 +20,6 @@ require("dotenv").config();
 const fs = require("fs");
 const db = require("../models");
 const globalFunc = require("../tools/func");
-
 
 // ---------------------------------------------------------------------------
 // ------------------------ Création d'un utilisateur ------------------------
@@ -123,7 +122,7 @@ exports.login = (req, res) => {
           // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
           res.status(200).json({
             userId: user.id,
-            imageUrl : user.imageUrl,
+            imageUrl: user.imageUrl,
             token: jwt.sign(
               // Token created with userId
               { userId: user.id },
@@ -132,8 +131,8 @@ exports.login = (req, res) => {
               // Valid for 24h
               { expiresIn: "24h" }
             ),
-            email:user.email,
-            username:user.username,
+            email: user.email,
+            username: user.username,
           });
         })
         .catch((error) => res.status(500).json({ error: "bcrypt error, check password !" }));
@@ -146,9 +145,7 @@ exports.login = (req, res) => {
 // --------------------------------------------------------------------------
 
 exports.getAll = (req, res) => {
-  db.User.findAndCountAll(
-    {include:[db.Post, db.Commentaire]}
-    )
+  db.User.findAndCountAll({ include: [db.Post, db.Commentaire] })
     .then((users) => res.status(200).json(users.rows))
     .catch((error) => res.status(404).json({ error }));
 };
@@ -165,18 +162,17 @@ exports.getOne = (req, res) => {
   db.User.findOne({ where: { id: userId } }).then((user) => {
     let root = user.isAdmin;
     if (req.params.id == userId || root == true) {
-
-      db.User.findOne({ 
-        where: { 
-        id: req.params.id },
+      db.User.findOne({
+        where: {
+          id: req.params.id,
+        },
         attributes: {
-          exclude: ['password']
-      },
-        
-       })
+          exclude: ["password"],
+        },
+      })
         .then((user) =>
           res.status(200).json({
-            user
+            user,
           })
         )
         .catch((error) => res.status(404).json({ error }));
@@ -197,15 +193,12 @@ exports.delete = (req, res) => {
 
   db.User.findOne({ where: { id: userId } })
 
- 
-
     .then((user) => {
       let root = user.isAdmin;
-      let lastUser = req.params.id == 1
-      let owner = req.params.id == userId || root == true 
+      let lastUser = req.params.id == 1;
+      let owner = req.params.id == userId || root == true;
 
       if (owner && !lastUser) {
-        
         db.User.destroy({ where: { id: req.params.id } })
           .then(function (data) {
             res.status(200).json({ token: jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, { expiresIn: "1ms" }), message: "User Deleted" });
@@ -222,8 +215,6 @@ exports.delete = (req, res) => {
     });
 };
 
-// Vérifier qu'on ne peut pas supprimer un compte admin existant ==> findAll
-
 // ---------------------------------------------------------------------------
 // -----------------------------  UPDATE User  -------------------------------
 // ---------------------------------------------------------------------------
@@ -232,30 +223,26 @@ exports.updateUser = (req, res) => {
   // -------- Find userid contained in the token -------------------
   const userId = globalFunc.whatId(req);
   console.log("Id from token : " + userId);
-  
+
   db.User.findOne({ where: { id: userId } })
-  
-  .then((user) => {
-    
-    let root = user.isAdmin;
-    
-    
-    if (req.params.id == userId || root == true) {
-      
-        console.log(req.body)
+
+    .then((user) => {
+      let root = user.isAdmin;
+
+      if (req.params.id == userId || root == true) {
+        console.log(req.body);
         const userObject = req.file
           ? // if req.file exists
             {
-              // ...JSON.parse(req.body.user), 
+              // ...JSON.parse(req.body.user),
               // imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
               imageUrl: `http://localhost:3000/images/${req.file.filename}`,
             }
           : // In case req.file doesn't exist
-            { ...req.body};
-            
+            { ...req.body };
 
         // then update User with userObjet informations
-        
+
         db.User.update({ ...userObject }, { where: { id: req.params.id } })
           .then(() => res.status(200).json({ message: "Modified!" }))
           .catch((error) => res.status(400).json({ error }));
@@ -267,4 +254,3 @@ exports.updateUser = (req, res) => {
       res.status(404).json({ message: "Something went wrong" });
     });
 };
-

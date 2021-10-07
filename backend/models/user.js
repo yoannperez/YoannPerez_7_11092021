@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
 
     imageUrl: {
       type: DataTypes.STRING,
-      defaultValue: "http://localhost:3000/images/default-user.jpg",
+      defaultValue: "https://vtours.360creaciones.com/formation/default-user.jpg",
     },
 
   });

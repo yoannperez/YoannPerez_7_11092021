@@ -13,10 +13,10 @@ Je choisis de développer un clone de Reddit, dans lequel les employés pourront
 
 # Technologies utilisées
 ## Backend
-NodeJS, ExpressJS, ORM:Sequelize, MySQL
+NodeJS, ExpressJS, MySQL, ORM:Sequelize.
     
 ## Frontend
-NodeJS, React, React-router, Axios
+NodeJS, React, React-router, Axios.
 # Comment utiliser ce dépot ?
 
 Vous devrez disposer des dernières versions de NodeJS et de npm installées sur votre machine afin de pouvoir executer ce projet en local.
@@ -31,15 +31,19 @@ Cloner ce repo :
 git clone https://github.com/yoannperez/YoannPerez_7_11092021.git
 ```
 
+Puis se placer dans le dossier:
+```
+cd YoannPerez_7_11092021
+```
 ## Importation du frontend comme sous-module
-La partie frontend du projet est vertionnée sur un repo à part entière que nous importeront dans ce projet en tant que sous-module :
+La partie frontend du projet est versionnée sur un repo à part entière que nous importerons dans ce projet en tant que sous-module :
 
 La commande suivante récupère les liens vers les sous-modules inclus dans le projet.
 ```
 git submodule init 
 ```
  
-La commande suivante importe les fichiers du sous-module dans son répertoires effectif  dans votre projet mère.
+La commande suivante importe les fichiers du sous-module dans son répertoires du projet mère.
 ```
 git submodule update 
 ```
@@ -50,32 +54,40 @@ Un script permet d'installer en une seule fois les dépendances des parties back
 ```
 npm run installation
 ```
-
+Suivant le système, il est possible que cette commande ne fonctionne pas comme il se doit. Si les dépendances des dossier nodes_modules ne se chargent pas, utiliser à la place:
+```
+cd /backend
+npm install
+cd ../frontend
+npm install
+```
 
 # Lancement de l'application
 ## Backend
 
 Il sera necessaire de disposer d'une base de donnée MySQL pour faire fonctionner ce projet. 
 
-Si vous ne disposez pas de serveur en local, il sera possible de créer une base de donnée en ligne à l'aide du service [https://www.db4free.net/](https://www.db4free.net/). 
+Si vous ne disposez pas de serveur local, il sera possible de créer une base de donnée en ligne à l'aide du service [https://www.db4free.net/](https://www.db4free.net/). 
 
-Dans le cadre de la formation, les identifiants d'une base de donnée prête emploi sont disponible dans le dossier contenant les livrables.
+Dans le cadre de la formation, les identifiants d'une base de donnée prête emploi sont disponibles dans le dossier contenant les livrables.
 
 Les informations de connection seront à renseigner dans la section {"development"} du fichier :
 ```
 /backend/config/config.json
 ```
-
+***
+## !! IMPORTANT !!
 Dans le cadre de la soutenance de formation, IL SERA NECESSAIRE de copier le fichier P7_04_ENV_FILE fourni avec les livrables à la racine du dossier /backend, et de le renommer en .env à l'aide de votre IDE.
 
-Ce fichier livré à part contient la clé de chiffrement nécessaire au décodage des tokens.
+Ce fichier livré à part contient la clé de chiffrement nécessaire au décodage des tokens d'authentification.
+***
 
 Enfin, il sera possible de démarrer l'API en tapant la commande suivante depuis la racine du dosser /backend:
 
 ```
 npm start
 ```
-Si la configuration est correcte, la serveur devrait retourner le message:
+Si la configuration est correcte, le serveur devrait retourner le message:
 ```
 Server started, listening on port 3000
 ```
@@ -99,9 +111,9 @@ cd /frontend
 
 Dans le fichier .env, il sera necessaire de vérifier l'adresse de l'API :
 ```
-REACT_APP_API_ADRESS=localhost:3000
+REACT_APP_API_ADRESS=http://localhost:3000
 ```
-Si le backend a changé de port précédement, il faudra l'indiquer ici.
+Si le backend n'utilise pas le port par défaut (3000) a changé de port, il faudra modifier ici en conséquences.
 
 Finalement, pour lancer le frontend de l'application, depuis de dossier /frontend, taper la commande :
 ```

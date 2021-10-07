@@ -204,10 +204,14 @@ exports.delete = (req, res) => {
 
   db.User.findOne({ where: { id: userId } })
 
+ 
+
     .then((user) => {
       let root = user.isAdmin;
-      
-      if (req.params.id == userId || root == true ) {
+      let lastUser = req.params.id == 1
+      let owner = req.params.id == userId || root == true 
+
+      if (owner && !lastUser) {
         
         db.User.destroy({ where: { id: req.params.id } })
           .then(function (data) {
@@ -241,6 +245,7 @@ exports.updateUser = (req, res) => {
   .then((user) => {
     
     let root = user.isAdmin;
+    
     
     if (req.params.id == userId || root == true) {
       

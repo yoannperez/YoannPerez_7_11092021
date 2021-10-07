@@ -1,3 +1,8 @@
+//                    -------------------------------------------------------
+//                    --                    POST  MODEL                    --
+//                    -------------------------------------------------------
+// --------------------------------------------------------------------------
+
 module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define("Post", {
     text: {
@@ -22,13 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     });
-
-    // Post.hasMany(models.Commentaire, {
-    //   // through: "PostComments",
-    //   foreignKey: {
-    //     allowNull: true,
-    //   },
-    // });
   };
 
   return Post;

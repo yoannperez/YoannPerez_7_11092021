@@ -206,9 +206,9 @@ exports.delete = (req, res) => {
 
     .then((user) => {
       let root = user.isAdmin;
-
-      if (req.params.id == userId || root == true) {
-        console.log(req.params.id);
+      
+      if (req.params.id == userId || root == true ) {
+        
         db.User.destroy({ where: { id: req.params.id } })
           .then(function (data) {
             res.status(200).json({ token: jwt.sign({ userId: user.id }, process.env.TOKEN_KEY, { expiresIn: "1ms" }), message: "User Deleted" });

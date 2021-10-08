@@ -11,13 +11,13 @@ const db = require("../models");
 
 // // Call Middlewares
 const auth = require("../middleware/auth");
-// const multer = require("../middleware/multer-config");
+const multer = require("../middleware/multer-config");
 
 // // Import Controller
 const postCtrl = require("../controllers/post-controller");
 
 // ------------    PROFILE ROUTES   --------------------
-router.post("/", auth, postCtrl.create); 
+router.post("/", auth, multer,  postCtrl.create); 
 router.get("/", auth, postCtrl.get); 
 router.get("/:id", auth, postCtrl.getOne); 
 router.put("/:id", auth, postCtrl.update); 

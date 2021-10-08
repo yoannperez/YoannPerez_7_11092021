@@ -16,14 +16,17 @@ const globalFunc = require("../tools/func");
 // ---------------------------------------------------------------------------
 
 exports.create = (req, res) => {
-  db.Post.create({
-    text: req.body.text,
-    UserId: req.body.UserId,
-  })
-    .then((newPost) => res.send(newPost))
-    .catch((error) => {
-      res.status(400).json({ message: "Something went wrong" });
-    });
+ 
+  const userObject = req.file // if req.file exists
+    ? {
+        ...JSON.parse(req.body.post),
+        imageUrl: `http://localhost:3000/images/${req.file.filename}`,
+      }
+    : { ...JSON.parse(req.body.post),};
+  
+  db.Post.create(userObject, { where: { id: req.params.id } })
+    .then(() => res.status(200).json({ message: "Post Created" }))
+    .catch((error) => res.status(400).json({ message: "Tu fais de la merde !" }));
 };
 
 // ---------------------------------------------------------------------------

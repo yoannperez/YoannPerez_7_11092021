@@ -44,7 +44,7 @@ exports.signup = (req, res, next) => {
   db.User.findOne({ where: { username: req.body.username } }).then((user) => {
     // if user doesn't exist in database, return an error
     if (user) {
-      return res.status(401).json({ error: `Username already used!` });
+      return res.status(401).json({ message: `Username déjà utilisé` });
     }
   });
 
@@ -52,7 +52,7 @@ exports.signup = (req, res, next) => {
     .then((user) => {
       // if user doesn't exist in database, return an error
       if (user) {
-        return res.status(401).json({ error: `Email already exists in database!` });
+        return res.status(401).json({ message: `Email déjà utilisé!` });
       }
       // if it's the first user, set admin true
       db.User.count().then((user) => {
@@ -107,7 +107,7 @@ exports.login = (req, res) => {
     .then((user) => {
       // if user doesn't exist in database, return an error
       if (!user) {
-        return res.status(401).json({ error: `User doesn't exist in database!` }); // identifiants non valide
+        return res.status(401).json({ message: `Adresse email inconnue` }); // identifiants non valide
       }
       // if user exists, we need to verify password
       bcrypt
@@ -117,7 +117,7 @@ exports.login = (req, res) => {
         .then((valid) => {
           // In case password is not valid
           if (!valid) {
-            return res.status(401).json({ error: "Wrong password !" }); // identifiants non valide
+            return res.status(401).json({ message : "Mot de passe incorrect !" }); // identifiants non valide
           }
           // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
           res.status(200).json({

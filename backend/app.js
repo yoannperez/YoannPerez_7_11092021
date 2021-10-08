@@ -50,8 +50,8 @@ db.sequelize.sync();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/comments", commentsRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/comments", commentsRoutes);
 
 /// END OF : ----- DEFINE ROUTES --------------------------
 

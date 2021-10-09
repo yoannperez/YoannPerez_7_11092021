@@ -1,11 +1,10 @@
 
 {
   "development": {
-    "username": "root",
-    "password": "root",
-    "database": "Groupomania",
-    "host": "127.0.0.1",
-    "port": "8889",
+    "username": "YOUR Password",
+    "database": "YOUR database name",
+    "host": "YOUR SQL database adresss",
+    "port": "YOUR SQL Port",
     "dialect": "mysql",
     "operatorAliases": 0
   },

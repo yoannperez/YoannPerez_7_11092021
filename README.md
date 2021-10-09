@@ -72,7 +72,7 @@ Si vous ne disposez pas de serveur local, il sera possible de créer une base de
 Dans le cadre de la formation, les identifiants d'une base de donnée prête emploi sont disponibles dans le dossier contenant les livrables.
 (NB : Il est possible que les temps d'accès à cette base de donnée gratuite en ligne soient très élevés et produire un comportement erratique de l'application)
 
-Les informations de connection seront à renseigner dans la section {"development"} du fichier :
+Les informations de connection seront à renseigner dans la section {"development"} du fichier, dans les champs précédés par "YOUR" :
 ```
 /backend/config/config.json
 ```

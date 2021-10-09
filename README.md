@@ -80,6 +80,17 @@ Les informations de connection seront à renseigner dans la section {"developmen
 ## !! IMPORTANT !!
 Dans le cadre de la soutenance de formation, IL SERA NECESSAIRE de copier le fichier P7_04_ENV_FILE fourni avec les livrables à la racine du dossier /backend, et de le renommer en .env à l'aide de votre IDE.
 
+***
+## !! IMPORTANT !!
+
+Il sera nécessaire de créer un dossier nommé "images" dans le dossier backend:
+
+```
+mkdir images
+```
+
+
+
 Ce fichier livré à part contient la clé de chiffrement nécessaire au décodage des tokens d'authentification.
 ***
 

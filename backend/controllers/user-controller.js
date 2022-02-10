@@ -117,7 +117,7 @@ exports.login = (req, res) => {
         .then((valid) => {
           // In case password is not valid
           if (!valid) {
-            return res.status(401).json({ message : "Mot de passe incorrect !" }); // identifiants non valide
+            return res.status(401).json({ message : "Mot de passe ou email incorrect !" }); // identifiants non valide
           }
           // In case password matches with database, we send a response 200, the user id ans the Token created with jsonwebtoken
           res.status(200).json({
@@ -235,8 +235,8 @@ exports.updateUser = (req, res) => {
           ? // if req.file exists
             {
               // ...JSON.parse(req.body.user),
-              // imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-              imageUrl: `http://localhost:3000/images/${req.file.filename}`,
+              imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+              // imageUrl: `http://localhost:3000/images/${req.file.filename}`,
             }
           : // In case req.file doesn't exist
             { ...req.body };

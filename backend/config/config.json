@@ -2,27 +2,31 @@
 {
   "development": {
     "username": "root",
-    "database": "Groupomania",
-    "password": "root",
-    "host": "localhost",
-    "port": "8889",
+    "database": "groupomania",
+    "password": "xenocrates",
+    "host": "mysqldb",
+    "port": "3306",
     "dialect": "mysql",
     "operatorAliases": 0
   },
 
   "test": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
+    "database": "groupomania",
+    "password": "xenocrates",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "port": "3388",
+    "dialect": "mysql",
+    "operatorAliases": 0
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
+    "database": "groupomania",
+    "password": "xenocrates",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "port": "3399",
+    "dialect": "mysql",
+    "operatorAliases": 0
   }
 }
 

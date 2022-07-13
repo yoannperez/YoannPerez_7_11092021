@@ -4,7 +4,7 @@
     "username": "root",
     "database": "groupomania",
     "password": "xenocrates",
-    "host": "mysqldb",
+    "host": "groupomania-db",
     "port": "3306",
     "dialect": "mysql",
     "operatorAliases": 0
@@ -12,21 +12,17 @@
 
   "test": {
     "username": "root",
-    "database": "groupomania",
-    "password": "xenocrates",
+    "password": null,
+    "database": "database_test",
     "host": "127.0.0.1",
-    "port": "3388",
-    "dialect": "mysql",
-    "operatorAliases": 0
+    "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "database": "groupomania",
-    "password": "xenocrates",
+    "password": null,
+    "database": "database_production",
     "host": "127.0.0.1",
-    "port": "3399",
-    "dialect": "mysql",
-    "operatorAliases": 0
+    "dialect": "mysql"
   }
 }
 

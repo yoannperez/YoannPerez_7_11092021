@@ -1,0 +1,8 @@
+.git
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+docker-compose.yml
+Dockerfile.dev
+/coverage

@@ -1,0 +1,68 @@
+version: "3.8"
+services:
+  
+   # frontend:
+   #    container_name: groupomania-ui
+   #    build:
+   #       context: ./frontend
+   #       dockerfile: Dockerfile.dev
+   #    ports:
+   #    -  3333:3333
+   #    networks:
+   #    - shiny-stack
+   #    environment:
+   #    - REACT_APP_API_ADRESS=https://localhost:3001
+   #    - PORT=3333
+   #    volumes:
+   #    -  ./frontend/src:/app/src
+   #    -  ./frontend/public:/app/public
+   #    depends_on:
+   #       - backend
+   #    stdin_open: true
+   #    tty: true
+
+   backend:
+      container_name: groupomania-api
+      build:
+         context: ./backend
+         dockerfile: Dockerfile
+      depends_on:
+         - mysqldb
+      environment:
+      - PORT=3000
+      - PORTHTTPS=3001
+      - SSLKEY=./ssl/example.com+4-key.pem
+      - SSLCERT=./ssl/example.com+4.pem
+      - TOKEN_KEY=AhwDyZtJcuJqfvBNeGHinqwt5jGCK6o5
+      ports:
+      - 3001:3001
+      networks:
+      - shiny-stack
+      volumes: 
+      - ./backend:/app/
+
+
+   mysqldb:
+    container_name: groupomania-db
+    image: mysql:5.7
+    # command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    # env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=xenocrates
+     # - MYSQL_ROOT_HOST =
+      # - MYSQL_USER=root
+      - MYSQL_DATABASE=groupomania
+    networks:
+      - shiny-stack
+    ports:
+      - 3306:3306
+    volumes:
+      - ./database/:/var/lib/mysql
+    
+
+
+
+networks:
+   shiny-stack:
+    driver: bridge

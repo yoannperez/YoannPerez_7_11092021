@@ -10,7 +10,7 @@
 // Call security modules needed for authentification
 //--------------------------------------------------
 // Crytping password with bcrypt
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 // Token validation by JWT
 const jwt = require("jsonwebtoken");
 // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.

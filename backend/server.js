@@ -8,7 +8,6 @@ const fs = require('fs');
 const app = require('./app');
 require('dotenv').config()
 
-
 ////////// Version HTTP /////////////////
 // Normalisation port
 const normalizePort = val => {
@@ -24,7 +23,7 @@ const normalizePort = val => {
 };
 
 //Déclaration du port
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORTHTTP || '3000');
 app.set('port', port);
 
 // Errors Management

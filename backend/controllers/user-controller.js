@@ -48,8 +48,6 @@ exports.signup = (req, res, next) => {
 	db.User.findOne({where: {username: req.body.username}}).then((user) => {
 		// Check if username exists in database
 		if (user !== null) {
-			console.log("Pas null");
-			console.log("Pas content");
 			return res.status(401).json({message: `Username déjà utilisé`});
 		} else {
 			db.User.findOne({where: {email: req.body.email}}).then((user) => {

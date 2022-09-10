@@ -7,7 +7,7 @@
 // Call modules
 const express = require("express");
 const path = require("path");
-const db = require("./models");
+const db = require("./models")
 
 // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
 require("dotenv").config();
@@ -22,6 +22,7 @@ const commentsRoutes = require("./routes/comments-routes");
 // Launch Xpress
 const app = express();
 
+
 // CORS Definition
 app.use((req, res, next) => {
   // Accpet connexions from everywhere
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
   next();
 });
+
 
 // Set static folder for multer, '/images' is a static folder,
 // a root's subfolder used when we receive a /images request
